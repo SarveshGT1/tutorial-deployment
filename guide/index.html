@@ -16,6 +16,7 @@ nav.top .wrap{display:flex;align-items:center;gap:24px;height:56px}
 nav.top img{height:22px;width:auto}
 nav.top .steps{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
 nav.top .steps a{font-size:13px;color:var(--ink2);text-decoration:none;width:28px;height:28px;display:grid;place-items:center;border-radius:14px;flex:none}
+nav.top .steps a.w{width:auto;padding-inline:10px}
 nav.top .steps a:hover{background:var(--tint);color:var(--gt)}
 .eb,.k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gt);font-weight:600}
 .hero{padding-block:96px 72px;border-bottom:1px solid var(--line)}
@@ -84,6 +85,14 @@ summary{cursor:pointer;color:var(--gt);font-weight:600;font-size:15px}
 details[open] summary{margin-bottom:10px}
 details p,details pre{font-size:15px}
 .trouble{padding-block:112px 64px;border-top:1px solid var(--line)}
+table.md{margin-top:12px;max-width:760px}
+table.md th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gt);font-weight:600;padding:8px 16px 8px 0;border-bottom:1px solid var(--gt)}
+table.md td{padding:9px 16px 9px 0}
+table.md td:last-child{text-align:left;color:#3A3A3C;white-space:normal;padding-left:0}
+.trouble ol{padding-left:22px;color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
+.trouble ol li+li,.trouble ul li+li{margin-top:4px}
+.trouble a{color:var(--gt)}
+.gitbash{border-top:0;padding-top:72px;border-bottom:1px solid var(--line)}
 .trouble h3{font-size:22px;margin-top:48px;letter-spacing:-.01em}
 .trouble h4{font-size:17px;margin-top:28px}
 .trouble p,.trouble ul{color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
@@ -105,7 +114,7 @@ footer img{height:26px;width:auto}
 </style>
 </head>
 <body>
-<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a><a href="#step-12">12</a><a href="#step-13">13</a><a href="#step-14">14</a><a href="#step-15">15</a></div></div></nav>
+<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a class="w" href="#git-bash">Setup</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a><a href="#step-12">12</a><a href="#step-13">13</a><a href="#step-14">14</a><a href="#step-15">15</a><a class="w" href="#troubleshooting">Help</a></div></div></nav>
 <main class="wrap">
   <section class="hero">
     <div class="eb">GT agent workshop · for builders</div>
@@ -115,10 +124,73 @@ footer img{height:26px;width:auto}
   </section>
 
   <section class="start">
-    <div><div class="k">1 · Unzip</div><h3>Extract the folder</h3><p>Right-click the zip, <b>Extract All</b>. Running it from inside the zip doesn't work.</p></div>
+    <div><div class="k">1 · Unzip</div><h3>Extract the folder</h3><p>Right-click the zip, <b>Extract All</b>. Running it from inside the zip doesn't work. Never used Git Bash? <a href="#git-bash">Start with Git Bash from zero</a>.</p></div>
     <div><div class="k">2 · Open</div><h3>Double-click start.cmd</h3><p>It finds Git Bash and opens the wizard at the right size. Or right-click the folder, <b>Open Git Bash here</b>.</p></div>
     <div><div class="k">3 · Play</div><h3>Follow the screens</h3>
       <div class="term">$ <b>bash start.sh</b><br>$ <b>bash start.sh doctor</b></div><p style="margin-top:8px">The second one checks your laptop when something's off.</p></div>
+  </section>
+
+  <section class="trouble gitbash" id="git-bash">
+    <div class="eb">Before you start</div>
+    <h2>Git Bash from zero.</h2>
+<p>Never opened a terminal? Start here. This page takes you from a laptop without Git Bash to the first screen of the workshop wizard in about 15 minutes. Do it before the workshop if you can.</p>
+<p>A terminal is a window where you type commands instead of clicking. Git Bash is the terminal that comes with Git for Windows. It runs Bash, the same command language Macs and Linux servers use, which is why one script can walk everybody through the workshop the same way. The wizard only copies one file, opens web pages and checks numbers. It doesn't change anything else on your laptop.</p>
+<h3>1. Check whether Git Bash is already installed</h3>
+<ol><li>Press the <b>Windows key</b> and type <code>Git Bash</code>.</li><li>If <b>Git Bash</b> shows up in the results, it's installed. Skip to section 3.</li><li>If nothing shows up, go to section 2.</li></ol>
+<h3>2. Install Git for Windows</h3>
+<p>Git Bash is part of Git for Windows. On a GT laptop you install it from the Software Center, which doesn't need admin rights.</p>
+<ol><li>Press the <b>Windows key</b>, type <code>Software Center</code> (Softwarecentrum) and open it.</li><li>Search for <code>Git</code>.</li><li>Click <b>Git for Windows</b>, then <b>Install</b> (Installeren). It takes a few minutes.</li><li>Can't find it in the Software Center? Ask the facilitator before the workshop, not during it.</li></ol>
+<p>On a laptop where you're allowed to install software yourself, you can also download the installer from <code>https://git-scm.com/download/win</code>. Click <b>Next</b> on every screen: the default choices are right for this workshop. Two of them matter, so leave them as they are:</p>
+<ul><li><b>Git Bash Here</b> stays ticked. It adds "Open Git Bash here" to the right-click menu.</li><li><b>Use MinTTY</b> stays selected. MinTTY is the window Git Bash runs in, with colours and proper copy and paste.</li></ul>
+<p><b>Check it worked.</b> Open Git Bash (Windows key, type <code>Git Bash</code>, Enter) and type:</p>
+<pre>git --version</pre>
+<p>Press Enter. You should see a line like <code>git version 2.47.1.windows.1</code>. The exact number doesn't matter.</p>
+<h3>3. Get the workshop files</h3>
+<p>The facilitator shares <code>tutorial-deployment.zip</code> in the workshop Teams channel.</p>
+<ol><li>Download the zip. It lands in your <b>Downloads</b> folder.</li><li>Right-click the zip and choose <b>Extract All</b> (Alles uitpakken), then <b>Extract</b> (Uitpakken).</li><li>A folder called <code>tutorial-deployment</code> opens. Inside it are <code>start.cmd</code>, <code>start.sh</code>, and the folders <code>data</code>, <code>guide</code> and <code>steps</code>.</li></ol>
+<p>Don't double-click your way into the zip and run things from there. Windows only shows you a preview of the files, and the wizard can't find its data.</p>
+<p>Have access to the GitHub repo? Then you can clone it instead of downloading the zip. Open Git Bash and type:</p>
+<pre>cd ~/Downloads
+git clone https://github.com/SarveshGT1/tutorial-deployment.git</pre>
+<h3>4. Open Git Bash in the workshop folder</h3>
+<p>Git Bash works in one folder at a time, so it has to start in <code>tutorial-deployment</code>. There are three ways to do that. Use the first one that works.</p>
+<p><b>Way 1: double-click <code>start.cmd</code>.</b> It finds Git Bash, opens a window at the right size in the right folder, and starts the wizard. If Windows shows "Windows protected your PC", click <b>More info</b>, then <b>Run anyway</b>.</p>
+<p><b>Way 2: right-click the folder.</b> In File Explorer, right-click the <code>tutorial-deployment</code> folder. On Windows 11, choose <b>Show more options</b> first. Then choose <b>Open Git Bash here</b>.</p>
+<p><b>Way 3: open Git Bash and walk to the folder.</b> Open Git Bash from the Start menu and type:</p>
+<pre>cd ~/Downloads/tutorial-deployment</pre>
+<p><b>Check you're in the right place.</b> Type <code>ls</code> and press Enter. You should see these names, maybe in a different order:</p>
+<pre>data  GIT-BASH.md  guide  README.md  start.cmd  start.sh  steps  tools  TROUBLESHOOTING.md</pre>
+<p>If you see something else, type <code>pwd</code> to see where you are, and use way 3 to get to the folder.</p>
+<h3>5. Git Bash in five minutes</h3>
+<p>These are all the commands you need today, and a few that will save you when something looks odd.</p>
+<table class="md"><tr><th>type this</th><th>and it</th></tr><tr><td><code>pwd</code></td><td>shows which folder you're in ("print working directory")</td></tr><tr><td><code>ls</code></td><td>lists what's in the folder</td></tr><tr><td><code>cd data</code></td><td>goes into the folder <code>data</code></td></tr><tr><td><code>cd ..</code></td><td>goes up one folder</td></tr><tr><td><code>cd ~</code></td><td>goes to your user folder, like <code>C:\Users\you</code></td></tr><tr><td><code>clear</code></td><td>wipes the screen</td></tr><tr><td><code>bash start.sh</code></td><td>runs the workshop wizard</td></tr></table>
+<p><b>Tab finishes words for you.</b> Type <code>cd tut</code> and press <b>Tab</b>: Git Bash completes it to <code>cd tutorial-deployment/</code>. Use it everywhere; it saves typos.</p>
+<p><b>The up arrow brings back your last command.</b> Press it again to go further back. Handy when you want to run the wizard again.</p>
+<p><b>Copy and paste work differently from Word.</b> In Git Bash:</p>
+<ul><li>Copy: select text with the mouse. With the default settings that already copies it. <b>Ctrl+Insert</b> also works.</li><li>Paste: <b>Shift+Insert</b>, or right-click and choose <b>Paste</b>.</li><li><b>Ctrl+C does not copy.</b> It stops whatever is running. In the wizard that's fine: your progress is saved.</li><li><b>Ctrl+V does not paste</b> in a default Git Bash window. Use Shift+Insert.</li></ul>
+<p><b>Windows paths look different.</b> Git Bash writes <code>C:\Users\you\Downloads</code> as <code>/c/Users/you/Downloads</code>, with forward slashes. <code>~</code> is short for your user folder, so <code>~/Downloads</code> is your Downloads folder. A folder name with spaces needs quotes: <code>cd "OneDrive - Company name"</code>.</p>
+<p><b>Text too small?</b> <b>Ctrl+plus</b> makes it bigger, <b>Ctrl+minus</b> smaller, <b>Ctrl+0</b> resets it. <b>Window too small?</b> Drag the bottom-right corner, or press <b>Alt+Enter</b> for full screen (Alt+Enter again to go back).</p>
+<p><b>Lost?</b> Close the window and open it again with way 2 from section 4. Nothing breaks when you close Git Bash.</p>
+<h3>6. Check your laptop with the doctor</h3>
+<p>Before the wizard, let it check the laptop:</p>
+<pre>bash start.sh doctor</pre>
+<p>Each line starts with ✓ (fine) or ! (look at this). Under every ! is the fix. Two results are common and harmless:</p>
+<ul><li><b>OneDrive not found:</b> you'll upload the Excel file by hand in step 2. The wizard shows you how.</li><li><b>Window smaller than 100 x 34:</b> drag the window bigger.</li></ul>
+<p>Everything else with a ! is worth fixing first. <a href="#troubleshooting">TROUBLESHOOTING.md</a> has the details, or ask the facilitator.</p>
+<h3>7. Run the wizard</h3>
+<pre>bash start.sh</pre>
+<p>Type your first name when it asks, and follow the screens. Every step has four screens:</p>
+<table class="md"><tr><th>key</th><th>screen</th></tr><tr><td>Enter</td><td>step done, on to the next one</td></tr><tr><td>w</td><td>why this step matters (+10 XP the first time)</td></tr><tr><td>i</td><td>what happens inside (+10 XP the first time)</td></tr><tr><td>h</td><td>stuck? the fixes for this step</td></tr><tr><td>g</td><td>open the visual guide in your browser</td></tr><tr><td>b</td><td>back one step</td></tr><tr><td>q</td><td>quit; your progress is saved</td></tr></table>
+<p>Type the letter and press <b>Enter</b>. Most steps end with a quiz (type a, b or c), and three steps ask you for a number that the script checks against the Excel file.</p>
+<p><b>Put the windows side by side.</b> Click Git Bash and press <b>Windows key + left arrow</b>. Click your browser and press <b>Windows key + right arrow</b>. Now you can read the wizard while you click in the browser.</p>
+<p><b>Stopping and continuing.</b> Press q, or just close the window. Next time, open Git Bash in the same folder and type <code>bash start.sh</code> again: you continue at the same step, with the same XP.</p>
+<p>Useful extras:</p>
+<pre>bash start.sh --step 8    # jump to step 8; your XP stays
+bash start.sh --ascii     # plain characters, if you see boxes or question marks
+bash start.sh --reset     # start over from zero
+bash start.sh --help      # this list</pre>
+<h3>8. After the workshop</h3>
+<ul><li>Your agent and flows stay in the workshop environment. Delete them there if the facilitator asks you to.</li><li><code>bash start.sh --reset</code> wipes your progress on the laptop. Deleting the <code>tutorial-deployment</code> folder removes everything else.</li><li>The copy of <code>koffie.xlsx</code> in your OneDrive folder <code>GT-Agent-Workshop</code> is yours to keep or delete.</li></ul>
   </section>
 
   <section class="xp">
@@ -443,7 +515,7 @@ thee 4 · chocomel 3 · flat white 4</pre>
 <h4>"Open Git Bash here" isn't in the right-click menu</h4>
 <p>Windows 11 hides it. Right-click the folder, choose <b>Show more options</b>, then <b>Open Git Bash here</b>. Still not there? Double-click <code>start.cmd</code> in the folder instead. It finds Git Bash for you.</p>
 <h4>Git Bash isn't installed</h4>
-<p>Install <b>Git for Windows</b> from the Software Center (Softwarecentrum), then try again. You don't need admin rights for the Software Center version.</p>
+<p>Install <b>Git for Windows</b> from the Software Center (Softwarecentrum), then try again. You don't need admin rights for the Software Center version. <a href="#git-bash">GIT-BASH.md</a> walks you through it, click by click.</p>
 <h4><code>$'\r': command not found</code> or <code>syntax error near unexpected token</code></h4>
 <p>The script got Windows line endings, usually because it went through an e-mail, Teams or a Git setting that converts them. Run it like this instead, which ignores them:</p>
 <pre>bash -o igncr start.sh</pre>

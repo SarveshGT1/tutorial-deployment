@@ -11,6 +11,7 @@ if not defined GIT (
   echo.
   echo   Git Bash is not installed on this laptop.
   echo   Install "Git for Windows" from the Software Center, then double-click start.cmd again.
+  echo   Step by step: open GIT-BASH.md in this folder, section 2.
   echo.
   pause
   exit /b 1

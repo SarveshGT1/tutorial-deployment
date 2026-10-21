@@ -10,7 +10,7 @@ Still not there? Double-click `start.cmd` in the folder instead. It finds Git Ba
 
 ### Git Bash isn't installed
 Install **Git for Windows** from the Software Center (Softwarecentrum), then try again. You don't need admin
-rights for the Software Center version.
+rights for the Software Center version. [GIT-BASH.md](GIT-BASH.md) walks you through it, click by click.
 
 ### `$'\r': command not found` or `syntax error near unexpected token`
 The script got Windows line endings, usually because it went through an e-mail, Teams or a Git setting that

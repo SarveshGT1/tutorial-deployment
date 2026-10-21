@@ -7,6 +7,9 @@ About 45 minutes.
 
 ## For participants
 
+Never used Git Bash? [GIT-BASH.md](GIT-BASH.md) covers everything from installing it to running the wizard, in
+about 15 minutes. The same text is the "Git Bash from zero" section of the guide.
+
 1. Unzip the folder (right-click, **Extract All**).
 2. Double-click **`start.cmd`**. Or right-click the folder, **Open Git Bash here**, and type `bash start.sh`.
 3. Follow the screens. Open `guide/index.html` in your browser for the same steps with diagrams.
@@ -98,6 +101,7 @@ Fix a label in `steps/NN.txt`, then run `python3 tools/build-guide.py` so the gu
 ## Repo layout
 
 ```
+GIT-BASH.md            the full Git Bash tutorial for participants, from install to first screen
 start.cmd              double-click launcher (Windows)
 start.sh               the wizard: screens, XP, quizzes, checks, doctor
 steps/01.txt … 15.txt  the step texts: Do, Why, Inside, quiz, Stuck? (single source)

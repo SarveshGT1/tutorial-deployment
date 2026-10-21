@@ -140,30 +140,51 @@ DIAGRAMS = {
 }
 
 
-def troubleshooting():
-    md = (ROOT / "TROUBLESHOOTING.md").read_text(encoding="utf-8").splitlines()
-    out, para, items, code, in_code = [], [], [], [], False
+ANCHORS = {"TROUBLESHOOTING.md": "#troubleshooting", "GIT-BASH.md": "#git-bash"}
+
+
+def md_section(name):
+    """The small part of Markdown the docs use: headings, paragraphs, lists, tables, code blocks, links."""
+    md = (ROOT / name).read_text(encoding="utf-8").splitlines()
+    out, buf, kind, in_code = [], [], None, False
 
     def md_inline(s):
         s = html.escape(s, quote=False)
         s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+        s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", lambda m: f'<a href="{ANCHORS.get(m.group(2), m.group(2))}">{m.group(1)}</a>', s)
         return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
 
     def flush():
-        if para: out.append("<p>" + " ".join(md_inline(x) for x in para) + "</p>"); para.clear()
-        if items: out.append("<ul>" + "".join(f"<li>{md_inline(x)}</li>" for x in items) + "</ul>"); items.clear()
+        nonlocal kind
+        if kind == "p": out.append("<p>" + " ".join(md_inline(x) for x in buf) + "</p>")
+        elif kind in ("ul", "ol"): out.append(f"<{kind}>" + "".join(f"<li>{md_inline(x)}</li>" for x in buf) + f"</{kind}>")
+        elif kind == "table":
+            rows = [[c.strip() for c in r.strip("|").split("|")] for r in buf if not re.fullmatch(r"[|\- ]+", r)]
+            head = "".join(f"<th>{md_inline(c)}</th>" for c in rows[0])
+            body = "".join("<tr>" + "".join(f"<td>{md_inline(c)}</td>" for c in r) + "</tr>" for r in rows[1:])
+            out.append(f'<table class="md"><tr>{head}</tr>{body}</table>')
+        elif kind == "pre": out.append("<pre>" + html.escape("\n".join(buf)) + "</pre>")
+        buf.clear(); kind = None
+
+    def add(k, s):
+        nonlocal kind
+        if kind != k: flush(); kind = k
+        buf.append(s)
 
     for line in md[1:]:
         if line.startswith("```"):
-            if in_code: out.append("<pre>" + html.escape("\n".join(code)) + "</pre>"); code.clear()
-            else: flush()
+            if in_code: flush()
+            else: flush(); kind = "pre"
             in_code = not in_code
-        elif in_code: code.append(line)
+        elif in_code: buf.append(line)
         elif line.startswith("## "): flush(); out.append(f"<h3>{md_inline(line[3:])}</h3>")
-        elif line.startswith("### "): flush(); out.append(f'<h4>{md_inline(line[4:])}</h4>')
-        elif line.startswith("- "): items.append(line[2:])
+        elif line.startswith("### "): flush(); out.append(f"<h4>{md_inline(line[4:])}</h4>")
+        elif line.startswith("- "): add("ul", line[2:])
+        elif re.match(r"\d+\. ", line): add("ol", line.split(". ", 1)[1])
+        elif line.startswith("|"): add("table", line)
+        elif line.startswith("  ") and kind in ("ul", "ol"): buf[-1] += " " + line.strip()
         elif not line.strip(): flush()
-        else: para.append(line)
+        else: add("p", line)
     flush()
     return "\n".join(out)
 
@@ -211,7 +232,7 @@ def main():
         body.append(step_html(n, meta, sec))
     nav = "".join(f'<a href="#step-{n}">{n}</a>' for n, _, _ in steps)
     page = TEMPLATE.replace("__NAV__", nav).replace("__STEPS__", "\n".join(body)) \
-        .replace("__LADDER__", ladder()).replace("__TROUBLE__", troubleshooting()) \
+        .replace("__LADDER__", ladder()).replace("__TROUBLE__", md_section("TROUBLESHOOTING.md")).replace("__GITBASH__", md_section("GIT-BASH.md")) \
         .replace("__ICONS__", icon("sharepoint.svg", "SharePoint") + '<i></i>' + icon("excel.svg", "Excel") + '<i></i>'
                  + icon("power-automate.svg", "Power Automate") + '<i></i>' + icon("copilot-studio.svg", "Copilot Studio"))
     (ROOT / "guide" / "index.html").write_text(page, encoding="utf-8")
@@ -236,6 +257,7 @@ nav.top .wrap{display:flex;align-items:center;gap:24px;height:56px}
 nav.top img{height:22px;width:auto}
 nav.top .steps{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
 nav.top .steps a{font-size:13px;color:var(--ink2);text-decoration:none;width:28px;height:28px;display:grid;place-items:center;border-radius:14px;flex:none}
+nav.top .steps a.w{width:auto;padding-inline:10px}
 nav.top .steps a:hover{background:var(--tint);color:var(--gt)}
 .eb,.k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gt);font-weight:600}
 .hero{padding-block:96px 72px;border-bottom:1px solid var(--line)}
@@ -304,6 +326,14 @@ summary{cursor:pointer;color:var(--gt);font-weight:600;font-size:15px}
 details[open] summary{margin-bottom:10px}
 details p,details pre{font-size:15px}
 .trouble{padding-block:112px 64px;border-top:1px solid var(--line)}
+table.md{margin-top:12px;max-width:760px}
+table.md th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gt);font-weight:600;padding:8px 16px 8px 0;border-bottom:1px solid var(--gt)}
+table.md td{padding:9px 16px 9px 0}
+table.md td:last-child{text-align:left;color:#3A3A3C;white-space:normal;padding-left:0}
+.trouble ol{padding-left:22px;color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
+.trouble ol li+li,.trouble ul li+li{margin-top:4px}
+.trouble a{color:var(--gt)}
+.gitbash{border-top:0;padding-top:72px;border-bottom:1px solid var(--line)}
 .trouble h3{font-size:22px;margin-top:48px;letter-spacing:-.01em}
 .trouble h4{font-size:17px;margin-top:28px}
 .trouble p,.trouble ul{color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
@@ -325,7 +355,7 @@ footer img{height:26px;width:auto}
 </style>
 </head>
 <body>
-<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps">__NAV__</div></div></nav>
+<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a class="w" href="#git-bash">Setup</a>__NAV__<a class="w" href="#troubleshooting">Help</a></div></div></nav>
 <main class="wrap">
   <section class="hero">
     <div class="eb">GT agent workshop · for builders</div>
@@ -335,10 +365,16 @@ footer img{height:26px;width:auto}
   </section>
 
   <section class="start">
-    <div><div class="k">1 · Unzip</div><h3>Extract the folder</h3><p>Right-click the zip, <b>Extract All</b>. Running it from inside the zip doesn't work.</p></div>
+    <div><div class="k">1 · Unzip</div><h3>Extract the folder</h3><p>Right-click the zip, <b>Extract All</b>. Running it from inside the zip doesn't work. Never used Git Bash? <a href="#git-bash">Start with Git Bash from zero</a>.</p></div>
     <div><div class="k">2 · Open</div><h3>Double-click start.cmd</h3><p>It finds Git Bash and opens the wizard at the right size. Or right-click the folder, <b>Open Git Bash here</b>.</p></div>
     <div><div class="k">3 · Play</div><h3>Follow the screens</h3>
       <div class="term">$ <b>bash start.sh</b><br>$ <b>bash start.sh doctor</b></div><p style="margin-top:8px">The second one checks your laptop when something's off.</p></div>
+  </section>
+
+  <section class="trouble gitbash" id="git-bash">
+    <div class="eb">Before you start</div>
+    <h2>Git Bash from zero.</h2>
+__GITBASH__
   </section>
 
   <section class="xp">
