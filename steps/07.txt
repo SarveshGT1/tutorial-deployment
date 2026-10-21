@@ -1,0 +1,31 @@
+title: Run it twice
+[do]
+- **Opslaan** → **Testen** (Test) → **Handmatig** (Manually)
+  → **Testen** → **Stroom uitvoeren** (Run flow)
+- drankje: **cappuccino** → run → **Gereed** (Done)
+- Open the run, click the Excel step, **Uitvoer weergeven** (Show
+  raw outputs): count the rows in "value"
+- Run it once more with cappuccino. Same rows?
+- Press Enter and type how many rows you counted
+[why]
+A flow gives the same output for the same input, every time. An AI
+agent can't promise that on its own.
+
+So the agent never counts. It asks the flow, and the flow answers
+with a number you just saw come out the same twice.
+[what]
+The run history shows every action with its inputs and outputs, as
+JSON. The rows sit in a list called value:
+   { "value": [ {"Nr":"3","Naam":"...","Drankje":"cappuccino"},
+               ... ] }
+
+Each row in value is one order. Count the {...} blocks.
+This is also how you debug any flow: open the run, open the step,
+read its output.
+[help]
+0 rows? Check the filter is exactly Drankje eq 'cappuccino', small
+letters, straight quotes.
+Error "file is locked"? Close koffie.xlsx in desktop Excel.
+Error "table not found"? The table must be called Bestellingen.
+Run seems stuck? Close the panel and open **Uitvoeringen** (Runs)
+under **28 dagen uitvoeringsgeschiedenis** (28-day run history).

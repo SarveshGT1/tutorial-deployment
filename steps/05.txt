@@ -1,0 +1,33 @@
+title: Give the flow one question
+[do]
+- Click the trigger card **Handmatig een stroom activeren**
+- **+ Een invoer toevoegen** (Add an input) → **Tekst** (Text)
+- Name the input **drankje**, in small letters
+- **Opslaan** (Save)
+[why]
+Without an input, the flow can only answer one fixed question.
+With the input drankje, the same flow counts any drink: cappuccino,
+latte, thee.
+
+Because one flow can answer many questions, it's worth handing to
+an agent later.
+[what]
+Each input becomes a field in the trigger's output. Every later step
+can use it as "dynamic content": the blue chip you'll pick with the
+lightning icon.
+
+Behind the chip is an expression like:
+   triggerBody()['text']
+You never type that. You pick the chip. But the name drankje is
+what you'll see on the chip, so spell it exactly.
+[quiz]
+Why does the flow get an input called drankje?
+a) So one flow can count any drink
+b) Because Power Automate requires at least one input
+c) To make the flow run faster
+answer: a
+because: The input turns a fixed question into a reusable one. A flow without inputs runs fine too; it just always does the same thing.
+[help]
+No "Een invoer toevoegen"? Click on the trigger card itself first:
+it opens a panel on the left with the inputs.
+Typo in the name? Click the input's name and type it again.

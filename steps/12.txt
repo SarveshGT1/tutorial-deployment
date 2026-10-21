@@ -1,0 +1,35 @@
+title: Connect the tool
+[do]
+- Back in your agent: **Hulpmiddelen** → open **Koffie tellen**
+- **Beschrijving** (Description), paste or type:
+  Telt hoeveel bestellingen er zijn voor één drankje.
+- Input **drankje**: **Dynamisch invullen met AI** (Dynamically
+  fill with AI)
+- **Opslaan** (Save), then **Publiceren** (Publish) the agent
+[why]
+The description is how the agent decides when to use the tool. A
+vague description gives an agent that never calls it, or calls it
+for everything.
+
+Dynamisch invullen means the agent takes the drink out of the
+question itself: "Hoeveel latte?" → drankje = latte.
+[what]
+On every question the orchestrator reads:
+   your question + instructions + every tool's name and description
+and plans: which tool, with which inputs.
+
+Change the flow later? Publish the flow, then remove and re-add the
+tool in the agent. The agent keeps the old version until you do.
+(We learned that one the hard way.)
+[quiz]
+Your agent never uses Koffie tellen. What do you check first?
+a) The tool's description
+b) The colour of the agent icon
+c) The Excel file's name
+answer: a
+because: The orchestrator chooses tools from their descriptions. A clear description is the first fix, then step 9's settings.
+[help]
+Koffie tellen not in the list? Publish the flow first (step 11),
+then **+ Een hulpmiddel toevoegen** → **Werkstroom** → Koffie
+tellen.
+Publish button greyed out? Save first, wait a few seconds.

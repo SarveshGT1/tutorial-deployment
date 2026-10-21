@@ -1,0 +1,23 @@
+title: Code checks the agent
+[do]
+- Press Enter and type the number the agent gave for cappuccino
+  after you added your row
+- The script knows the real counts in the file, and checks it
+[why]
+Code calculates, the LLM explains, and code checks.
+
+Every GT agent gets the same treatment before a client sees it: a
+set of questions with known answers, checked by code. You just ran
+the smallest possible version of that test.
+[what]
+The script holds the answer key: 30 orders,
+   cappuccino 8 · latte 6 · espresso 5
+   thee 4 · chocomel 3 · flat white 4
+plus the one row you added. If the agent says 9, the chain is
+right end to end. If it says 8, it read the file before your row.
+Any other number means the agent counted by itself.
+[help]
+8? The row isn't in the table yet, or you asked in the old chat.
+Way off? The agent counted by itself: check step 9 and the tool
+description in step 12.
+0? The Filterquery quotes or spelling (step 6 and step 11).

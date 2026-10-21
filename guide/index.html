@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build a barista · GT agent workshop</title>
+<style>
+:root{--ink:#1D1D1F;--ink2:#6E6E73;--ink3:#A1A1A6;--line:#D9D6E0;--gt:#4F2D7F;--tint:#F6F3FA;--ok:#1E7B4A;--bad:#B42318;--bg:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+p,h1,h2,h3,h4,ul,pre,figure{margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+nav.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:24px;height:56px}
+nav.top img{height:22px;width:auto}
+nav.top .steps{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
+nav.top .steps a{font-size:13px;color:var(--ink2);text-decoration:none;width:28px;height:28px;display:grid;place-items:center;border-radius:14px;flex:none}
+nav.top .steps a:hover{background:var(--tint);color:var(--gt)}
+.eb,.k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gt);font-weight:600}
+.hero{padding-block:96px 72px;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(48px,9vw,96px);line-height:1.02;letter-spacing:-.035em;font-weight:600;margin-top:16px;text-wrap:balance}
+.hero .sub{font-size:clamp(19px,2.4vw,24px);color:var(--ink2);max-width:640px;margin-top:20px;line-height:1.4}
+.icons{display:flex;align-items:center;margin-top:56px;max-width:560px}
+.icons img{flex:none;width:clamp(40px,8vw,56px);height:auto}
+.icons i{flex:1;height:1px;background:var(--line);margin-inline:12px}
+.start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;padding-block:64px;border-bottom:1px solid var(--line)}
+.start>div{border-top:1px solid var(--gt);padding-top:16px;min-width:0}
+.start h3{font-size:20px;font-weight:600;margin:8px 0 6px;letter-spacing:-.01em}
+.start p{color:var(--ink2);font-size:16px}
+.term{background:#1D1D1F;color:#E8E6EC;border-radius:10px;padding:20px 24px;font:14px/1.6 Menlo,Consolas,monospace;margin-top:12px;overflow-x:auto}
+.term b{color:#B9A3DA;font-weight:400}
+.xp{padding-block:72px;border-bottom:1px solid var(--line)}
+.xp h2,.act h2,.trouble h2{font-size:clamp(36px,6vw,56px);letter-spacing:-.03em;line-height:1.05;font-weight:600;margin-top:12px}
+.xp>p{color:var(--ink2);max-width:640px;margin-top:16px;font-size:19px}
+.xp .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:40px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td:last-child{text-align:right;color:var(--gt);font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:16px}
+.badges td:first-child{white-space:nowrap;padding-right:16px;font-weight:600}
+.badges td:last-child{text-align:left;color:var(--ink2);white-space:normal}
+svg{width:100%;height:auto;display:block;overflow:visible}
+svg .rail{stroke:var(--line);stroke-width:1.5}
+svg .seg{stroke:var(--gt);stroke-width:2}
+svg .dash{stroke-dasharray:4 5}
+svg .tick{stroke:var(--gt);stroke-width:1.5}
+svg .lab{font:600 14px -apple-system,"Helvetica Neue","Segoe UI",Arial,sans-serif;fill:var(--ink);text-anchor:middle}
+svg .sub{font:12.5px -apple-system,"Helvetica Neue","Segoe UI",Arial,sans-serif;fill:var(--ink2);text-anchor:middle}
+svg .l{text-anchor:start} svg .e{text-anchor:end}
+.dia{margin-top:48px;overflow-x:auto}
+.dia svg{min-width:640px}
+.dia figcaption,.shot figcaption{font-size:14px;color:var(--ink2);margin-top:14px}
+.act{padding-block:112px 40px}
+.act>p{font-size:21px;color:var(--ink2);max-width:640px;margin-top:16px;line-height:1.45}
+.step{display:grid;grid-template-columns:96px minmax(0,1fr);gap:24px;padding-block:48px;border-top:1px solid var(--line)}
+.num{font-size:40px;font-weight:300;color:var(--gt);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.step h3{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.do{margin-top:24px;padding:20px 24px;background:var(--tint);border-radius:12px}
+.do ul{margin-top:8px}
+.step ul{padding:0;list-style:none}
+.step li{position:relative;padding-left:22px;margin-top:6px}
+.step li::before{content:"→";position:absolute;left:0;color:var(--gt)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;margin-top:28px}
+.cols>div{border-top:1px solid var(--line);padding-top:14px;min-width:0}
+.cols p,.cols li{font-size:16px;color:#3A3A3C}
+.k+p,.k+ul{margin-top:8px}
+p+p,p+ul,ul+p,pre+p,p+pre,ul+pre{margin-top:12px}
+pre{font:13.5px/1.55 Menlo,Consolas,monospace;color:var(--ink);overflow-x:auto;padding:4px 0;white-space:pre}
+code{font:.88em Menlo,Consolas,monospace;background:var(--tint);padding:1px 5px;border-radius:4px}
+.shot{margin-top:32px}
+.shot img{width:100%;max-width:760px;border:1px solid var(--line);border-radius:10px}
+.quiz{margin-top:32px;border-top:1px solid var(--gt);padding-top:14px}
+.quiz .q{font-weight:600;margin-top:8px}
+.opts{display:grid;gap:8px;margin-top:12px;max-width:620px}
+.opts button{all:unset;cursor:pointer;display:flex;gap:12px;align-items:baseline;padding:10px 14px;border:1px solid var(--line);border-radius:10px;font-size:16px;transition:border-color .2s,background .2s}
+.opts button span{color:var(--gt);font-weight:600}
+.opts button:hover{border-color:var(--gt)}
+.opts button:focus-visible{outline:2px solid var(--gt);outline-offset:2px}
+.opts button.ok{border-color:var(--ok);background:#EEF7F1}
+.opts button.no{border-color:var(--bad);background:#FDF1F0}
+.because{margin-top:12px;color:var(--ink2);font-size:16px}
+details{margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;color:var(--gt);font-weight:600;font-size:15px}
+details[open] summary{margin-bottom:10px}
+details p,details pre{font-size:15px}
+.trouble{padding-block:112px 64px;border-top:1px solid var(--line)}
+.trouble h3{font-size:22px;margin-top:48px;letter-spacing:-.01em}
+.trouble h4{font-size:17px;margin-top:28px}
+.trouble p,.trouble ul{color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
+.trouble ul{padding-left:20px}
+.trouble pre{margin-top:8px;background:var(--tint);border-radius:8px;padding:12px 16px}
+footer{border-top:1px solid var(--line);padding-block:40px 64px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;color:var(--ink2);font-size:15px}
+footer img{height:26px;width:auto}
+@media (max-width:760px){
+  .start,.xp .grid,.cols{grid-template-columns:minmax(0,1fr);gap:28px}
+  .step{grid-template-columns:minmax(0,1fr);gap:8px}
+  .num{font-size:28px}
+  .hero{padding-block:64px 48px}
+  nav.top .steps{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .grow{stroke-dasharray:800;stroke-dashoffset:800;animation:grow 2.4s cubic-bezier(.2,.7,.2,1) .3s forwards}
+  @keyframes grow{to{stroke-dashoffset:0}}
+}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a><a href="#step-12">12</a><a href="#step-13">13</a><a href="#step-14">14</a><a href="#step-15">15</a></div></div></nav>
+<main class="wrap">
+  <section class="hero">
+    <div class="eb">GT agent workshop · for builders</div>
+    <h1>Build a barista.</h1>
+    <p class="sub">From an empty folder to a working Copilot Studio agent in 15 steps. A Git Bash wizard walks you through it one screen at a time, and code checks the numbers your flow and agent give back.</p>
+    <div class="icons"><img src="img/sharepoint.svg" alt="SharePoint" width="56" height="56"><i></i><img src="img/excel.svg" alt="Excel" width="56" height="56"><i></i><img src="img/power-automate.svg" alt="Power Automate" width="56" height="56"><i></i><img src="img/copilot-studio.svg" alt="Copilot Studio" width="56" height="56"></div>
+  </section>
+
+  <section class="start">
+    <div><div class="k">1 · Unzip</div><h3>Extract the folder</h3><p>Right-click the zip, <b>Extract All</b>. Running it from inside the zip doesn't work.</p></div>
+    <div><div class="k">2 · Open</div><h3>Double-click start.cmd</h3><p>It finds Git Bash and opens the wizard at the right size. Or right-click the folder, <b>Open Git Bash here</b>.</p></div>
+    <div><div class="k">3 · Play</div><h3>Follow the screens</h3>
+      <div class="term">$ <b>bash start.sh</b><br>$ <b>bash start.sh doctor</b></div><p style="margin-top:8px">The second one checks your laptop when something's off.</p></div>
+  </section>
+
+  <section class="xp">
+    <div class="eb">The XP system</div>
+    <h2>Read, build, prove it.</h2>
+    <p>Every step pays XP. Reading why it works pays too, and the quizzes ask about what you read. Code checks three numbers along the way, and those pay the most.</p>
+    <figure class="dia"><svg viewBox="0 0 880 80" role="img" aria-label="Levels from Trainee to Partner"><line x1="40" y1="40" x2="840" y2="40" class="rail"/><line x1="40" y1="40" x2="840" y2="40" class="seg grow"/><line x1="40.0" y1="33" x2="40.0" y2="47" class="tick"/><text x="40.0" y="22" class="lab">Trainee</text><text x="40.0" y="68" class="sub">0 XP</text><line x1="146.66666666666669" y1="33" x2="146.66666666666669" y2="47" class="tick"/><text x="146.66666666666669" y="22" class="lab">Assistant</text><text x="146.66666666666669" y="68" class="sub">400 XP</text><line x1="306.66666666666663" y1="33" x2="306.66666666666663" y2="47" class="tick"/><text x="306.66666666666663" y="22" class="lab">Senior</text><text x="306.66666666666663" y="68" class="sub">1000 XP</text><line x1="466.6666666666667" y1="33" x2="466.6666666666667" y2="47" class="tick"/><text x="466.6666666666667" y="22" class="lab">Manager</text><text x="466.6666666666667" y="68" class="sub">1600 XP</text><line x1="653.3333333333334" y1="33" x2="653.3333333333334" y2="47" class="tick"/><text x="653.3333333333334" y="22" class="lab">Director</text><text x="653.3333333333334" y="68" class="sub">2300 XP</text><line x1="840.0" y1="33" x2="840.0" y2="47" class="tick"/><text x="840.0" y="22" class="lab">Partner</text><text x="840.0" y="68" class="sub">3000 XP</text></svg></figure>
+    <div class="grid">
+      <div><div class="k">How you earn XP</div>
+        <table>
+          <tr><td>Finish a step</td><td>+100</td></tr>
+          <tr><td>Open a step's Why (w) or Inside (i) screen</td><td>+10 each</td></tr>
+          <tr><td>Quiz right the first time / second time</td><td>+50 / +20</td></tr>
+          <tr><td>Streak: quizzes right first time in a row</td><td>+10 per streak, max +50</td></tr>
+          <tr><td>Check: flow rows (step 7), agent answer (13)</td><td>+100 each</td></tr>
+          <tr><td>Final check: the agent after your new row (15)</td><td>+250</td></tr>
+          <tr><td>Every badge</td><td>+50</td></tr>
+        </table>
+      </div>
+      <div><div class="k">Eight badges</div>
+        <table class="badges">
+          <tr><td>Data drop</td><td>Your data sits in a named table in the cloud</td></tr>
+          <tr><td>Deterministic</td><td>Your flow counted, the same way twice</td></tr>
+          <tr><td>Agent born</td><td>Your agent has a tool it can call</td></tr>
+          <tr><td>Live data</td><td>The data changed, the agent kept up, code agreed</td></tr>
+          <tr><td>Quiz master</td><td>Every quiz right the first time</td></tr>
+          <tr><td>Curious</td><td>Read every Why and every Inside screen</td></tr>
+          <tr><td>Speedrun</td><td>Finished within 40 minutes</td></tr>
+          <tr><td>Partner</td><td>Reached the top of the ladder</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+<header class="act" id="act-1"><div class="eb">Act 1 · SharePoint · OneDrive · Excel</div><h2>The data.</h2><p>Every agent starts as a folder. Before any AI, there is a place where the data lives, and someone who decides what goes in it.</p>
+<p>In this act you make that folder and put an Excel table in it.</p><figure class="dia"><svg viewBox="0 0 880 90" role="img" aria-label="Site to Library to Folder to File to Agent"><line x1="100" y1="46" x2="780" y2="46" class="rail"/><line x1="100" y1="46" x2="780" y2="46" class="seg"/><line x1="100.0" y1="39" x2="100.0" y2="53" class="tick"/><text x="100.0" y="28" class="lab">Site</text><text x="100.0" y="74" class="sub">gtnl-my.sharepoint.com</text><line x1="270.0" y1="39" x2="270.0" y2="53" class="tick"/><text x="270.0" y="28" class="lab">Library</text><text x="270.0" y="74" class="sub">OneDrive</text><line x1="440.0" y1="39" x2="440.0" y2="53" class="tick"/><text x="440.0" y="28" class="lab">Folder</text><text x="440.0" y="74" class="sub">GT-Agent-Workshop</text><line x1="610.0" y1="39" x2="610.0" y2="53" class="tick"/><text x="610.0" y="28" class="lab">File</text><text x="610.0" y="74" class="sub">koffie.xlsx</text><line x1="780.0" y1="39" x2="780.0" y2="53" class="tick"/><text x="780.0" y="28" class="lab">Agent</text><text x="780.0" y="74" class="sub">Barista</text></svg><figcaption>The folder you connect is where the agent is born.</figcaption></figure></header>
+
+<section class="step" id="step-1">
+  <div class="num">01</div>
+  <div class="body">
+    <h3>Check in, barista</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Put this window on the left half of your screen</li><li>Put your browser on the right half</li><li>Press <b>w</b> for the why, <b>i</b> for what happens inside</li><li>Then press Enter and type your first name</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>About thirty people build in the same Copilot Studio environment today. Your name goes into every flow and agent you make, so you can find yours and nobody overwrites anybody else's.</p>
+<p>Read the why and what screens. Each one gives you XP, and the quiz after every step asks about them.</p></div>
+      <div><div class="k">Inside</div><p>This script is plain Bash. It runs on your laptop and never talks to Microsoft itself. It does four things:</p>
+<ul><li>copies the workshop Excel file into your OneDrive</li><li>opens the right web page at the right moment</li><li>puts the agent instructions on your clipboard</li><li>checks the numbers your flow and agent give back</li></ul>
+<p>Progress is saved in the file .progress next to this script. Press q any time; run it again and you continue where you stopped.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Where will your agent read its data from?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>From this laptop</button><button type="button" data-ok="1"><span>b</span>From a SharePoint library: your OneDrive</button><button type="button" data-ok="0"><span>c</span>From inside Copilot Studio</button></div><p class="because" hidden>The script only copies the file. The flow and the agent read it in the cloud, from your OneDrive, and OneDrive for Business is a SharePoint library.</p></div>
+    <details><summary>Stuck?</summary><p>Screen looks garbled (boxes, question marks)? Quit with q and run:</p>
+<pre>bash start.sh --ascii</pre>
+<p>Window too small? Drag it bigger: 100 x 34 characters is ideal. Something else odd? Run  bash start.sh doctor  and show the result.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-2">
+  <div class="num">02</div>
+  <div class="body">
+    <h3>Make the folder, drop in the data</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Press Enter. The script makes the folder <b>GT-Agent-Workshop</b> in your OneDrive and copies <b>koffie.xlsx</b> into it</li><li>Watch the OneDrive cloud icon in the taskbar: it syncs in seconds</li><li>If the script can't find OneDrive, it tells you how to upload the file by hand. That works just as well.</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>The folder you connect is where the agent is born. Whoever can open the folder can see what the agent sees: permissions come from the library, not from the agent.</p>
+<p>That's why you choose the folder first. A tidy folder with one clear file gives a reliable agent. A dump of everything gives an agent that guesses.</p></div>
+      <div><div class="k">Inside</div><p>OneDrive for Business is not a separate cloud. It is a SharePoint document library on your personal site:</p>
+<pre>gtnl-my.sharepoint.com/personal/&lt;you&gt;</pre>
+<p>The OneDrive app on your laptop syncs the folder:</p>
+<pre>your laptop  ──&gt;  OneDrive app  ──&gt;  SharePoint library</pre>
+<p>The script finds the folder through the Windows variable OneDriveCommercial. If that's empty it looks for "OneDrive - ...". It never overwrites a koffie.xlsx that's already there.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">OneDrive for Business is...</p><div class="opts"><button type="button" data-ok="0"><span>a</span>A separate cloud next to SharePoint</button><button type="button" data-ok="1"><span>b</span>A SharePoint document library on your personal site</button><button type="button" data-ok="0"><span>c</span>A backup of your laptop's C: drive</button></div><p class="because" hidden>Your OneDrive lives on gtnl-my.sharepoint.com: the same SharePoint, on a site that belongs to you.</p></div>
+    <details><summary>Stuck?</summary><p>"Can't find OneDrive": upload by hand. In the browser: OneDrive, <b>+ Nieuw</b> (New), <b>Map</b> (Folder), name it GT-Agent-Workshop, open it, <b>Uploaden</b> (Upload), <b>Bestanden</b> (Files), pick data/koffie.xlsx. "Permission denied" or "busy": koffie.xlsx is open in desktop Excel. Close it and press b, then Enter, to retry. Red cross on the OneDrive icon: sign in to OneDrive first.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-3">
+  <div class="num">03</div>
+  <div class="body">
+    <h3>Find your table in Excel</h3>
+    <div class="do"><div class="k">Do</div><ul><li>In the browser (opening now): <b>Mijn bestanden</b> (My files) → <b>GT-Agent-Workshop</b> → <b>koffie.xlsx</b></li><li>It opens in Excel for the web. Click any cell in the data.</li><li>Tab <b>Tabelontwerp</b> (Table Design), far left: the table name is <b>Bestellingen</b></li><li>Look at the columns: Nr, Naam, Afdeling, Drankje, Suiker</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Excel or PDF? It depends on the question.</p>
+<p>A table has fixed columns, so code can count it exactly: how many cappuccinos, which department, how much sugar. A PDF is text for reading: AI can summarise it, but nobody can count from it reliably.</p>
+<p>Questions with one right number go in a table. Today's question has one right number.</p></div>
+      <div><div class="k">Inside</div><p>A flow can't read loose cells. It reads named Excel tables. The table Bestellingen has 30 rows and 5 columns, and each column becomes a field the flow can filter on.</p>
+<pre>koffie.xlsx
+  └─ sheet Bestellingen
+       └─ table Bestellingen  (Nr, Naam, Afdeling, Drankje, Suiker)</pre>
+<p>Your data, typed in plain cells without a table, is invisible to Power Automate. Select it and press Ctrl+T to make it a table.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">When can a flow read rows from an Excel file?</p><div class="opts"><button type="button" data-ok="1"><span>a</span>When the data is in a named table</button><button type="button" data-ok="0"><span>b</span>When the file is saved as .csv</button><button type="button" data-ok="0"><span>c</span>When the sheet is called Data</button></div><p class="because" hidden>The Excel Online (Business) connector only sees tables. Ctrl+T turns a range into one.</p></div>
+    <details><summary>Stuck?</summary><p>Don't see the folder? Wait 30 seconds for sync, then refresh (F5). No Tabelontwerp tab? Click inside the data first. The tab only shows when the cursor is in a table. Excel opens in the desktop app? Close it and pick <b>Openen in browser</b> (Open in browser) instead.</p></details>
+  </div>
+</section>
+<header class="act" id="act-2"><div class="eb">Act 2 · Power Automate</div><h2>The flow.</h2><p>A flow is deterministic: the same input gives the same output every time. There's no AI inside it, so it never guesses. It does need a trigger to start.</p>
+<p>In this act you build a flow that counts coffee, and test it by hand.</p><figure class="dia"><svg viewBox="0 0 880 196" role="img" aria-label="Four kinds of trigger start the same flow"><text x="0" y="28" class="lab l">Handmatig</text><text x="0" y="44" class="sub l">you press a button</text><path d="M150 24 C 260 24, 280 93, 380 93" class="seg" fill="none"/><text x="0" y="74" class="lab l">Planning</text><text x="0" y="90" class="sub l">every Monday 07:00</text><path d="M150 70 C 260 70, 280 93, 380 93" class="rail" fill="none"/><text x="0" y="120" class="lab l">Automatisch</text><text x="0" y="136" class="sub l">a new e-mail or file</text><path d="M150 116 C 260 116, 280 93, 380 93" class="rail" fill="none"/><text x="0" y="166" class="lab l">Agent</text><text x="0" y="182" class="sub l">an agent calls it</text><path d="M150 162 C 260 162, 280 93, 380 93" class="seg" fill="none"/><line x1="380" y1="80" x2="380" y2="106" class="tick"/><text x="392" y="88" class="lab l">Flow</text><text x="392" y="104" class="sub l">same input, same output</text><line x1="560" y1="93" x2="700" y2="93" class="seg"/><line x1="700" y1="80" x2="700" y2="106" class="tick"/><text x="712" y="88" class="lab l">Result</text><text x="712" y="104" class="sub l">a number, a file, a mail</text></svg><figcaption>Four kinds of trigger. Today you use Handmatig, then Agent.</figcaption></figure></header>
+
+<section class="step" id="step-4">
+  <div class="num">04</div>
+  <div class="body">
+    <h3>Start a flow in Power Automate</h3>
+    <div class="do"><div class="k">Do</div><ul><li>In Power Automate (opening now): <b>+ Maken</b> (Create)</li><li><b>Direct uitvoerbare cloudstroom</b> (Instant cloud flow)</li><li>Name: <b>Koffie tellen <i>your name</i></b></li><li>Trigger: <b>Handmatig een stroom activeren</b> (Manually trigger a flow) → <b>Maken</b> (Create)</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>A trigger is the start button of a flow. There are four kinds:</p>
+<ul><li>Handmatig: you press a button (today, for testing)</li><li>Planning: on a schedule, e.g. every Monday at 07:00</li><li>Automatisch: an event, e.g. a new e-mail or a new file</li><li>Custom: another system or an agent calls it</li></ul>
+<p>Handmatig is the best start for learning: you decide when it runs, and you see every result straight away.</p></div>
+      <div><div class="k">Inside</div><p>A flow is a trigger followed by actions. It runs in Microsoft's cloud, not on your laptop: close your laptop and a scheduled flow still runs.</p>
+<p>Every run is saved in the run history, with the input and output of every action. That history is how you debug a flow, and how you prove later what it did.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Which of these can NOT start a flow?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>A schedule, every morning at 08:00</button><button type="button" data-ok="0"><span>b</span>A new e-mail arriving in a mailbox</button><button type="button" data-ok="1"><span>c</span>The barista's mood</button></div><p class="because" hidden>Triggers are events a computer can see: a button, a clock, an e-mail, a file, an agent. Moods don't count (yet).</p></div>
+    <details><summary>Stuck?</summary><p>Can't find Direct uitvoerbare cloudstroom? In English it's "Instant cloud flow". Some screens call it "Directe cloudstroom". Wrong environment? Top right, <b>Omgeving</b> (Environment): pick the one the facilitator named. Agents and flows must share it. The new designer looks different? That's fine; the steps are the same. Old designer: use the toggle at the top right.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-5">
+  <div class="num">05</div>
+  <div class="body">
+    <h3>Give the flow one question</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Click the trigger card <b>Handmatig een stroom activeren</b></li><li><b>+ Een invoer toevoegen</b> (Add an input) → <b>Tekst</b> (Text)</li><li>Name the input <b>drankje</b>, in small letters</li><li><b>Opslaan</b> (Save)</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Without an input, the flow can only answer one fixed question. With the input drankje, the same flow counts any drink: cappuccino, latte, thee.</p>
+<p>Because one flow can answer many questions, it's worth handing to an agent later.</p></div>
+      <div><div class="k">Inside</div><p>Each input becomes a field in the trigger's output. Every later step can use it as "dynamic content": the blue chip you'll pick with the lightning icon.</p>
+<p>Behind the chip is an expression like:</p>
+<pre>triggerBody()['text']</pre>
+<p>You never type that. You pick the chip. But the name drankje is what you'll see on the chip, so spell it exactly.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Why does the flow get an input called drankje?</p><div class="opts"><button type="button" data-ok="1"><span>a</span>So one flow can count any drink</button><button type="button" data-ok="0"><span>b</span>Because Power Automate requires at least one input</button><button type="button" data-ok="0"><span>c</span>To make the flow run faster</button></div><p class="because" hidden>The input turns a fixed question into a reusable one. A flow without inputs runs fine too; it just always does the same thing.</p></div>
+    <details><summary>Stuck?</summary><p>No "Een invoer toevoegen"? Click on the trigger card itself first: it opens a panel on the left with the inputs. Typo in the name? Click the input's name and type it again.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-6">
+  <div class="num">06</div>
+  <div class="body">
+    <h3>Let the flow read the file</h3>
+    <div class="do"><div class="k">Do</div><ul><li><b>+</b> under the trigger → search <b>Excel</b> → <b>Excel Online (Business)</b> → <b>Rijen weergeven die aanwezig zijn in een tabel</b> (List rows present in a table)</li><li><b>Locatie</b>: OneDrive for Business · <b>Documentbibliotheek</b>: OneDrive</li><li><b>Bestand</b>: folder icon → GT-Agent-Workshop → koffie.xlsx</li><li><b>Tabel</b>: Bestellingen</li><li><b>Geavanceerde parameters</b> (Advanced) → <b>Filterquery</b>, type:</li></ul>
+<pre>  Drankje eq '</pre>
+<p>  then lightning icon → chip <b>drankje</b>, then type  '</p>
+<ul><li>The result reads:  Drankje eq '[drankje]'  → <b>Opslaan</b> (Save)</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>You let Excel do the filtering, so only matching rows come back. Then the flow counts them exactly.</p>
+<p>The single quotes matter. They tell Excel "this is a piece of text". Without them Excel goes looking for a column called cappuccino.</p></div>
+      <div><div class="k">Inside</div><p>Filterquery is an OData filter. The Excel connector understands one condition with one of these operators:</p>
+<pre>eq  ne  contains  startswith  endswith</pre>
+<p>e.g.  Drankje eq 'latte'   or   contains(Naam, 'an')</p>
+<p>The action returns at most 256 rows unless you switch on paging (Settings → Paginering). Fine for 30 orders; remember it for real data.</p>
+<p>The first time, Excel asks you to sign in: that's a connection. The flow reads the file with your account and your permissions.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">What does the filter  Drankje eq 'latte'  give back?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>The number of lattes</button><button type="button" data-ok="1"><span>b</span>Only the rows where Drankje is latte</button><button type="button" data-ok="0"><span>c</span>Every row, with lattes on top</button></div><p class="because" hidden>A filter returns rows, not a number. Counting them is a separate step, which you'll add with length() in act 3.</p></div>
+    <details><summary>Stuck?</summary><p>No Filterquery? Open <b>Geavanceerde parameters</b> / "Show all". Curly quotes ‘ ’ instead of straight ' '? Delete and retype them here, not in Word or Outlook. Can't find the file? Wait for sync (step 2) and check the Locatie is OneDrive for Business, not SharePoint.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-7">
+  <div class="num">07</div>
+  <div class="body">
+    <h3>Run it twice</h3>
+    <div class="do"><div class="k">Do</div><ul><li><b>Opslaan</b> → <b>Testen</b> (Test) → <b>Handmatig</b> (Manually) → <b>Testen</b> → <b>Stroom uitvoeren</b> (Run flow)</li><li>drankje: <b>cappuccino</b> → run → <b>Gereed</b> (Done)</li><li>Open the run, click the Excel step, <b>Uitvoer weergeven</b> (Show raw outputs): count the rows in "value"</li><li>Run it once more with cappuccino. Same rows?</li><li>Press Enter and type how many rows you counted</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>A flow gives the same output for the same input, every time. An AI agent can't promise that on its own.</p>
+<p>So the agent never counts. It asks the flow, and the flow answers with a number you just saw come out the same twice.</p></div>
+      <div><div class="k">Inside</div><p>The run history shows every action with its inputs and outputs, as JSON. The rows sit in a list called value:</p>
+<pre>{ "value": [ {"Nr":"3","Naam":"...","Drankje":"cappuccino"},
+            ... ] }</pre>
+<p>Each row in value is one order. Count the {...} blocks. This is also how you debug any flow: open the run, open the step, read its output.</p></div>
+    </div>
+    
+    <details><summary>Stuck?</summary><p>0 rows? Check the filter is exactly Drankje eq 'cappuccino', small letters, straight quotes. Error "file is locked"? Close koffie.xlsx in desktop Excel. Error "table not found"? The table must be called Bestellingen. Run seems stuck? Close the panel and open <b>Uitvoeringen</b> (Runs) under <b>28 dagen uitvoeringsgeschiedenis</b> (28-day run history).</p></details>
+  </div>
+</section>
+<header class="act" id="act-3"><div class="eb">Act 3 · Copilot Studio, classic</div><h2>The agent.</h2><p>Your flow counts. Now an agent will listen, pick the flow, and explain the number in plain Dutch.</p>
+<p>The agent never counts by itself. Code calculates, the LLM explains.</p><figure class="dia"><svg viewBox="0 0 800 140" role="img" aria-label="The question goes to the agent, the tool, the flow and the Excel table; the number comes back"><line x1="60" y1="40" x2="740" y2="40" class="seg"/><path d="M740 40 L740 110 L230 110 L230 40" class="rail dash" fill="none"/><text x="485" y="128" class="sub">aantal: 8 comes back · the agent explains it</text><line x1="60" y1="33" x2="60" y2="47" class="tick"/><text x="60" y="20" class="lab">Question</text><text x="60" y="66" class="sub">Hoeveel cappuccino's?</text><line x1="230" y1="33" x2="230" y2="47" class="tick"/><text x="230" y="20" class="lab">Agent</text><text x="230" y="66" class="sub">plans, picks a tool</text><line x1="400" y1="33" x2="400" y2="47" class="tick"/><text x="400" y="20" class="lab">Koffie tellen</text><text x="400" y="66" class="sub">tool + description</text><line x1="570" y1="33" x2="570" y2="47" class="tick"/><text x="570" y="20" class="lab">Agent flow</text><text x="570" y="66" class="sub">length(value)</text><line x1="740" y1="33" x2="740" y2="47" class="tick"/><text x="740" y="20" class="lab">Excel table</text><text x="740" y="66" class="sub">OneDrive · Bestellingen</text></svg><figcaption>Code calculates, the LLM explains.</figcaption></figure><figure class="dia"><svg viewBox="-2 0 806 140" role="img" aria-label="Two flows with the same Excel step and different start and end"><text x="0" y="20" class="lab l">Handmatig flow</text><line x1="0" y1="34" x2="800" y2="34" class="rail"/><line x1="300" y1="34" x2="540" y2="34" class="seg"/><line x1="0" y1="28" x2="0" y2="40" class="tick"/><text x="0" y="56" class="sub l">you press Testen</text><line x1="300" y1="28" x2="300" y2="40" class="tick"/><text x="300" y="56" class="sub l">Excel: rows for drankje</text><line x1="540" y1="28" x2="540" y2="40" class="tick"/><text x="540" y="56" class="sub l">count</text><line x1="800" y1="28" x2="800" y2="40" class="tick"/><text x="800" y="56" class="sub e">you read the output</text><text x="0" y="90" class="lab l">Agent flow</text><line x1="0" y1="104" x2="800" y2="104" class="rail"/><line x1="300" y1="104" x2="540" y2="104" class="seg"/><line x1="0" y1="98" x2="0" y2="110" class="tick"/><text x="0" y="126" class="sub l">Wanneer een agent de stroom aanroept</text><line x1="300" y1="98" x2="300" y2="110" class="tick"/><text x="300" y="126" class="sub l">Excel: rows for drankje</text><line x1="540" y1="98" x2="540" y2="110" class="tick"/><text x="540" y="126" class="sub l">count</text><line x1="800" y1="98" x2="800" y2="110" class="tick"/><text x="800" y="126" class="sub e">Reageren op de agent</text></svg><figcaption>Why you build the count twice: the steps are the same, the start and the end differ.</figcaption></figure></header>
+
+<section class="step" id="step-8">
+  <div class="num">08</div>
+  <div class="body">
+    <h3>Create your agent, classic style</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Copilot Studio (opening now): bottom of the left bar <b>…</b> → <b>Open classic experience</b> (klassieke ervaring)</li><li><b>Agents</b> → <b>+ Nieuwe agent</b> (New agent) → skip the chat: <b>Configureren</b> (Configure)</li><li>Name: <b>Barista <i>your name</i></b></li><li>Press Enter here: the instructions go on your clipboard</li><li>Ctrl+V into <b>Instructies</b> (Instructions) → <b>Maken</b> (Create)</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Classic shows you everything: instructions, tools, topics, settings. Each part is a setting you can open and change.</p>
+<p>That's why classic is the foundation for complex agents at GT: when something goes wrong, you can see where. The newer experience is quicker to start, but hides more of the wiring.</p></div>
+      <div><div class="k">Inside</div><p>A classic agent is four things you set yourself:</p>
+<ul><li>Instructies: how it behaves (the text on your clipboard)</li><li>Kennis (Knowledge): documents it may search. Not used today.</li><li>Hulpmiddelen (Tools): flows and connectors it may call</li><li>Onderwerpen (Topics): scripted conversations</li></ul>
+<p>The instructions say: always use the tool "Koffie tellen", never count yourself. Read them after you paste.</p></div>
+    </div>
+    <figure class="shot"><img src="img/shot_topic.png" alt="A topic in the classic authoring canvas: every part of the agent is visible." loading="lazy"><figcaption>A topic in the classic authoring canvas: every part of the agent is visible. Example from Microsoft Learn.</figcaption></figure><div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Why do we build in the classic experience?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>It's the only one that can use flows</button><button type="button" data-ok="1"><span>b</span>Every part of the agent is visible and adjustable</button><button type="button" data-ok="0"><span>c</span>It runs on the laptop instead of the cloud</button></div><p class="because" hidden>Both experiences run in the cloud and can use flows. Classic shows the wiring, which is what you need for complex agents.</p></div>
+    <details><summary>Stuck?</summary><p>No "Open classic experience"? On the home page use <b>Other ways to build</b> / <b>Andere manieren om te bouwen</b>, or <b>+ Maken</b> (Create) → <b>Nieuwe agent</b> → <b>Configureren</b>. Clipboard empty? Press b, then Enter on this step again. Or open data/instructies.txt in Notepad and copy it from there.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-9">
+  <div class="num">09</div>
+  <div class="body">
+    <h3>Let the agent pick its tools</h3>
+    <div class="do"><div class="k">Do</div><ul><li>In your agent: <b>Instellingen</b> (Settings), top right</li><li><b>Generatieve AI</b> (Generative AI)</li><li>Orchestration: <b>Generatief</b> / Ja (Yes)</li><li><b>Zoeken op het web</b> (Web search): <b>Uit</b> (Off)</li><li><b>Algemene kennis</b> (General knowledge): <b>Uit</b> (Off), if shown</li><li><b>Opslaan</b> (Save)</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Generative orchestration lets the agent choose which tool to use, based on the question and the tool's description. Without it, tools only run when a scripted topic tells them to.</p>
+<p>With web search and general knowledge off, the agent can only answer from your flow. It can't fill gaps from the internet or from what the model happens to know.</p></div>
+      <div><div class="k">Inside</div><p>Two kinds of orchestration:</p>
+<ul><li>Klassiek: you write topics with trigger phrases; a tool only runs when a topic calls it</li><li>Generatief: the AI reads your tool descriptions and picks the right one, filling in its inputs from the question</li></ul>
+<p>GT agents use generative orchestration with general knowledge and web search off. It's the standard setting for our agents, and you'll use it again after today.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">What does generative orchestration do?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>It writes the flow for you</button><button type="button" data-ok="1"><span>b</span>It lets the agent choose a tool from its description</button><button type="button" data-ok="0"><span>c</span>It makes the agent search the web</button></div><p class="because" hidden>The orchestrator reads tool names and descriptions and picks one. That's why step 12's description matters so much.</p></div>
+    <details><summary>Stuck?</summary><p>Can't find Instellingen? It's the gear icon or the word Settings at the top right of the agent page, not of Copilot Studio itself. The toggle is greyed out? Your environment may force it. Tell the facilitator and continue.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-10">
+  <div class="num">10</div>
+  <div class="body">
+    <h3>Give the agent a flow it can call</h3>
+    <div class="do"><div class="k">Do</div><ul><li><b>Hulpmiddelen</b> (Tools) → <b>+ Een hulpmiddel toevoegen</b> (Add a tool) → <b>Werkstroom</b> (Flow) → <b>Nieuwe agentwerkstroom</b> (New agent flow)</li><li>The trigger is already there: <b>Wanneer een agent de stroom aanroept</b> (When an agent calls the flow)</li><li>Click it → <b>+ Een invoer toevoegen</b> → <b>Tekst</b> → <b>drankje</b></li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Why not reuse your Handmatig flow? An agent can only call a flow that starts with this agent trigger. The engine is the same; only the start button differs.</p>
+<p>So you build the counting logic twice today: once to test by hand, once for the agent. In real work you'd start with the agent trigger.</p></div>
+      <div><div class="k">Inside</div><p>An agent flow is a Power Automate flow that lives with your agent in Copilot Studio. It is deterministic like any flow, and it runs on Copilot Studio capacity instead of Power Automate licences.</p>
+<pre>Handmatig flow:  [button]        → Excel → you read the output
+Agent flow:      [agent calls]   → Excel → answer to the agent</pre>
+<p>The designer opens in Copilot Studio. It's the same designer as in Power Automate, so everything from act 2 works here too.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Why can't the agent call your Handmatig flow from act 2?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>It isn't published yet</button><button type="button" data-ok="1"><span>b</span>It doesn't start with "When an agent calls the flow"</button><button type="button" data-ok="0"><span>c</span>Agents can't read Excel</button></div><p class="because" hidden>The agent trigger is the only door an agent can use. Your Handmatig flow is fine; it just has a different door.</p></div>
+    <details><summary>Stuck?</summary><p>The designer opens in a new tab? That's normal. Keep both tabs. No "Nieuwe agentwerkstroom"? Look for <b>Agentstroom</b> / "Agent flow" or <b>+ Nieuwe stroom</b> in the Werkstroom panel.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-11">
+  <div class="num">11</div>
+  <div class="body">
+    <h3>Count, then answer the agent</h3>
+    <div class="do"><div class="k">Do</div><ul><li><b>+</b> → the same Excel step as step 6 (file, table, Filterquery Drankje eq '[drankje]' with the chip from THIS trigger)</li><li>Under <b>Reageren op de agent</b> (Respond to the agent): <b>+ Uitvoer toevoegen</b> (Add an output) → <b>Getal</b> (Number)</li><li>Name: <b>aantal</b>. Value: <b>fx</b>, type  length( → <b>Dynamische inhoud</b> (Dynamic content) → <b>value</b> from the Excel step → type  )</li><li><b>Opslaan</b> → <b>Publiceren</b> (Publish) → name it <b>Koffie tellen</b></li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>The flow does the counting, not the agent. length(value) is arithmetic: it can't be wrong, and it can't be talked into another number.</p>
+<p>Code calculates, the LLM explains. That's the GT house rule, and this step is where you build it.</p></div>
+      <div><div class="k">Inside</div><p>length() counts the items in a list. value is the list of rows the Excel step returned, so:</p>
+<pre>length(body('Rijen_weergeven...')?['value'])  →  8</pre>
+<p>Picking the chip writes that path for you.</p>
+<p>Reageren op de agent sends typed outputs back: text, a number, or yes/no. You send one number. Publish creates the version the agent calls; unpublished changes are invisible to it.</p></div>
+    </div>
+    <figure class="shot"><img src="img/shot_flow.png" alt="An agent flow in the designer: a trigger, steps, and an answer back to the agent." loading="lazy"><figcaption>An agent flow in the designer: a trigger, steps, and an answer back to the agent. Example from Microsoft Learn.</figcaption></figure><div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">What does length(value) give back here?</p><div class="opts"><button type="button" data-ok="1"><span>a</span>The number of rows the filter found</button><button type="button" data-ok="0"><span>b</span>The number of characters in the file</button><button type="button" data-ok="0"><span>c</span>The total of all orders</button></div><p class="because" hidden>value is the list of matching rows; length() counts the items in a list.</p></div>
+    <details><summary>Stuck?</summary><p>"Invalid expression"? Pick value from the dynamic content list instead of typing the path. Check both brackets are there. Chip drankje missing? Use the one from this flow's trigger, not from your Handmatig flow. Publish fails? Read the red message at the top; usually it's an empty required field in the Excel step.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-12">
+  <div class="num">12</div>
+  <div class="body">
+    <h3>Connect the tool</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Back in your agent: <b>Hulpmiddelen</b> → open <b>Koffie tellen</b></li><li><b>Beschrijving</b> (Description), paste or type: Telt hoeveel bestellingen er zijn voor één drankje.</li><li>Input <b>drankje</b>: <b>Dynamisch invullen met AI</b> (Dynamically fill with AI)</li><li><b>Opslaan</b> (Save), then <b>Publiceren</b> (Publish) the agent</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>The description is how the agent decides when to use the tool. A vague description gives an agent that never calls it, or calls it for everything.</p>
+<p>Dynamisch invullen means the agent takes the drink out of the question itself: "Hoeveel latte?" → drankje = latte.</p></div>
+      <div><div class="k">Inside</div><p>On every question the orchestrator reads:</p>
+<pre>your question + instructions + every tool's name and description</pre>
+<p>and plans: which tool, with which inputs.</p>
+<p>Change the flow later? Publish the flow, then remove and re-add the tool in the agent. The agent keeps the old version until you do. (We learned that one the hard way.)</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">Your agent never uses Koffie tellen. What do you check first?</p><div class="opts"><button type="button" data-ok="1"><span>a</span>The tool's description</button><button type="button" data-ok="0"><span>b</span>The colour of the agent icon</button><button type="button" data-ok="0"><span>c</span>The Excel file's name</button></div><p class="because" hidden>The orchestrator chooses tools from their descriptions. A clear description is the first fix, then step 9's settings.</p></div>
+    <details><summary>Stuck?</summary><p>Koffie tellen not in the list? Publish the flow first (step 11), then <b>+ Een hulpmiddel toevoegen</b> → <b>Werkstroom</b> → Koffie tellen. Publish button greyed out? Save first, wait a few seconds.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-13">
+  <div class="num">13</div>
+  <div class="body">
+    <h3>Ask your agent</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Open the test pane: <b>Testen</b> (Test), top right</li><li>Ask:  <b>Hoeveel cappuccino's zijn er besteld?</b></li><li>Open the <b>activity map</b> (Activiteitenkaart): see it call Koffie tellen with drankje = cappuccino</li><li>Try thee, latte, flat white. Then ask about the weather.</li><li>Press Enter and type the number the agent gave for cappuccino</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>This is the first time the whole chain runs: your words, the agent's plan, the flow, the file, and back.</p>
+<p>The weather question matters too. A good agent says no to what it wasn't built for. Yours should answer that it only counts orders.</p></div>
+      <div><div class="k">Inside</div><p>The activity map shows what the orchestrator did:</p>
+<pre>question → plan → Koffie tellen(drankje: cappuccino)
+         → flow runs → aantal: 8 → answer</pre>
+<p>If the map shows no tool call, the agent answered from its own head. That's the failure to look for in every agent you build.</p></div>
+    </div>
+    <figure class="shot"><img src="img/shot_map.png" alt="The activity map: which tool the agent picked, and with which inputs." loading="lazy"><figcaption>The activity map: which tool the agent picked, and with which inputs. Example from Microsoft Learn.</figcaption></figure>
+    <details><summary>Stuck?</summary><p>It doesn't call the tool? Check step 9 (Generatief), the description in step 12, then start a new test chat (the refresh icon). Error from the flow? Open the flow's run history in Copilot Studio: the Excel step's output tells you why. Wrong drink filled in? Check the instructions list the six drinks.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-14">
+  <div class="num">14</div>
+  <div class="body">
+    <h3>Change the data, not the agent</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Go back to koffie.xlsx in Excel for the web</li><li>Type a new row directly under the last one:</li></ul>
+<pre>  31 · <i>your name</i> · your team · cappuccino · 0</pre>
+<ul><li>Check the row turned into table colour (it's inside the table)</li><li>Wait 10 seconds, start a new test chat, ask about cappuccino again</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>You didn't change the agent; the new row changed the answer.</p>
+<p>This is act 1 again: whoever controls the folder controls what the agent knows. Keep the data right and the agent stays right, without rebuilding anything.</p></div>
+      <div><div class="k">Inside</div><p>Every question starts a fresh flow run, and every run reads the file as it is now. Nothing is copied into the agent.</p>
+<p>Compare that with Knowledge (Kennis): documents there are indexed first, so a change shows up later. A flow reads live, every time.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">You add a row to the table. What must you change in the agent?</p><div class="opts"><button type="button" data-ok="1"><span>a</span>Nothing</button><button type="button" data-ok="0"><span>b</span>Republish the agent</button><button type="button" data-ok="0"><span>c</span>Upload the file again</button></div><p class="because" hidden>The flow reads the live file on every call. The agent only sees what the flow sends back.</p></div>
+    <details><summary>Stuck?</summary><p>Still 8? The row may be outside the table: it must have the table's colour. Drag the small handle at the table's bottom-right corner down one row. Excel says "Read-only"? Click <b>Bewerken</b> (Edit) at the top.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-15">
+  <div class="num">15</div>
+  <div class="body">
+    <h3>Code checks the agent</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Press Enter and type the number the agent gave for cappuccino after you added your row</li><li>The script knows the real counts in the file, and checks it</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>Code calculates, the LLM explains, and code checks.</p>
+<p>Every GT agent gets the same treatment before a client sees it: a set of questions with known answers, checked by code. You just ran the smallest possible version of that test.</p></div>
+      <div><div class="k">Inside</div><p>The script holds the answer key: 30 orders,</p>
+<pre>cappuccino 8 · latte 6 · espresso 5
+thee 4 · chocomel 3 · flat white 4</pre>
+<p>plus the one row you added. If the agent says 9, the chain is right end to end. If it says 8, it read the file before your row. Any other number means the agent counted by itself.</p></div>
+    </div>
+    
+    <details><summary>Stuck?</summary><p>8? The row isn't in the table yet, or you asked in the old chat. Way off? The agent counted by itself: check step 9 and the tool description in step 12. 0? The Filterquery quotes or spelling (step 6 and step 11).</p></details>
+  </div>
+</section>
+
+  <section class="trouble" id="troubleshooting">
+    <div class="eb">When something's off</div>
+    <h2>Troubleshooting.</h2>
+<p>Start here: <code>bash start.sh doctor</code> checks your laptop and prints what's wrong, with the fix next to it.</p>
+<h3>Starting the wizard</h3>
+<h4>"Open Git Bash here" isn't in the right-click menu</h4>
+<p>Windows 11 hides it. Right-click the folder, choose <b>Show more options</b>, then <b>Open Git Bash here</b>. Still not there? Double-click <code>start.cmd</code> in the folder instead. It finds Git Bash for you.</p>
+<h4>Git Bash isn't installed</h4>
+<p>Install <b>Git for Windows</b> from the Software Center (Softwarecentrum), then try again. You don't need admin rights for the Software Center version.</p>
+<h4><code>$'\r': command not found</code> or <code>syntax error near unexpected token</code></h4>
+<p>The script got Windows line endings, usually because it went through an e-mail, Teams or a Git setting that converts them. Run it like this instead, which ignores them:</p>
+<pre>bash -o igncr start.sh</pre>
+<p><code>start.cmd</code> already does this.</p>
+<h4>"Windows protected your PC" when double-clicking start.cmd</h4>
+<p>SmartScreen blocks files that came from the internet. Click <b>More info</b>, then <b>Run anyway</b>. Or right-click <code>start.cmd</code>, <b>Properties</b>, tick <b>Unblock</b>, <b>OK</b>.</p>
+<h4>"data/koffie.xlsx not found"</h4>
+<p>You're running it from inside the zip. Right-click the zip, <b>Extract All</b> (Alles uitpakken), open the extracted folder and start again.</p>
+<h4>The screen shows boxes, question marks or <code>â”€</code></h4>
+<p>Your terminal isn't using UTF-8. Run <code>bash start.sh --ascii</code> for a plain-text version of the same wizard.</p>
+<h4>Lines wrap or the screen doesn't fit</h4>
+<p>Make the window bigger: about 100 × 34 characters. <code>start.cmd</code> opens it at that size.</p>
+<h4>I want to start over or jump to a step</h4>
+<pre>bash start.sh --reset      # wipes your progress and XP
+bash start.sh --step 8     # jump to step 8 (your XP stays)</pre>
+<h3>Act 1 · The data</h3>
+<h4>The script can't find my OneDrive</h4>
+<p>It looks for the Windows variable <code>OneDriveCommercial</code>, then for a folder called <code>OneDrive - …</code> in your user folder. If OneDrive isn't running or isn't signed in, neither exists. Upload by hand: in the browser open OneDrive, <b>+ Nieuw</b> → <b>Map</b> → <code>GT-Agent-Workshop</code>, open it, <b>Uploaden</b> → <b>Bestanden</b> → <code>data/koffie.xlsx</code>.</p>
+<h4>"Permission denied" or "Device or resource busy" when copying</h4>
+<p><code>koffie.xlsx</code> is open in desktop Excel. Close it, press <b>b</b>, then Enter to try step 2 again.</p>
+<h4>The file doesn't show up in the browser</h4>
+<p>OneDrive syncs within about 30 seconds. A red cross on the OneDrive cloud icon means you're signed out; click it and sign in. Then refresh the browser (F5).</p>
+<h4>There's no "Tabelontwerp" tab</h4>
+<p>Click a cell inside the data first. The tab only appears when the cursor is in a table.</p>
+<h3>Act 2 · The flow</h3>
+<h4>Wrong environment</h4>
+<p>Top right in Power Automate and Copilot Studio: <b>Omgeving</b> (Environment). Pick the one the facilitator named. The flow and the agent must be in the same environment.</p>
+<h4>The Excel step returns 0 rows</h4>
+<p>The filter must be exactly <code>Drankje eq 'cappuccino'</code>: column name with a capital D, the value in small letters, straight single quotes. Curly quotes (‘ ’) from Word or Outlook don't work; retype them in the browser.</p>
+<h4>"The file is locked" or "resource busy"</h4>
+<p>Someone has <code>koffie.xlsx</code> open in desktop Excel. Close it. Excel for the web is fine.</p>
+<h4>"Table not found"</h4>
+<p>The table must be called <code>Bestellingen</code>. Check in Excel for the web: <b>Tabelontwerp</b> → <b>Tabelnaam</b>.</p>
+<h4>There's no Filterquery field</h4>
+<p>Open <b>Geavanceerde parameters</b> (Advanced parameters) or <b>Alles weergeven</b> (Show all) under the Excel step.</p>
+<h3>Act 3 · The agent</h3>
+<h4>No "Open classic experience"</h4>
+<p>On the Copilot Studio home page, use <b>Other ways to build</b> / <b>Andere manieren om te bouwen</b>, or <b>+ Maken</b> → <b>Nieuwe agent</b> → <b>Configureren</b>.</p>
+<h4>The clipboard is empty when I paste the instructions</h4>
+<p>Press <b>b</b>, then Enter on step 8 to copy them again. Or open <code>data/instructies.txt</code> in Notepad, Ctrl+A, Ctrl+C.</p>
+<h4>Koffie tellen isn't in the tool list</h4>
+<p>Publish the agent flow first (step 11). Then <b>Hulpmiddelen</b> → <b>+ Een hulpmiddel toevoegen</b> → <b>Werkstroom</b> → <b>Koffie tellen</b>.</p>
+<h4>The agent answers but doesn't use the tool</h4>
+<p>Check in this order:</p>
+<ul><li><b>Instellingen</b> → <b>Generatieve AI</b>: orchestration is <b>Generatief</b></li><li>The tool's description says what it does: "Telt hoeveel bestellingen er zijn voor één drankje."</li><li>The input <code>drankje</code> is set to <b>Dynamisch invullen met AI</b></li><li>Start a new test chat (the refresh icon): old chats keep old settings</li></ul>
+<h4>I changed the flow but the agent still does the old thing</h4>
+<p>Publish the flow, then remove the tool from the agent and add it again. The agent keeps the old version until you do.</p>
+<h4>Still 8 after adding a row</h4>
+<p>The new row must be inside the table: it gets the table's colour. If it doesn't, drag the small handle at the table's bottom-right corner down one row. Then start a new test chat.</p>
+<h3>Still stuck</h3>
+<p>Run <code>bash start.sh doctor</code>, take a screenshot of it, and wave at the facilitator.</p>
+  </section>
+
+  <footer><img src="img/logo.png" alt="Grant Thornton"><span>Code calculates. The LLM explains. Code checks.</span></footer>
+</main>
+<script>
+document.querySelectorAll('.quiz').forEach(q => {
+  q.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    b.classList.add(b.dataset.ok === '1' ? 'ok' : 'no');
+    if (b.dataset.ok === '1') q.querySelector('.because').hidden = false;
+  }));
+});
+</script>
+</body>
+</html>

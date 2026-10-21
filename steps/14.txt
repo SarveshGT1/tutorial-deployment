@@ -1,0 +1,31 @@
+title: Change the data, not the agent
+[do]
+- Go back to {FILE} in Excel for the web
+- Type a new row directly under the last one:
+     31 · {NAME} · your team · cappuccino · 0
+- Check the row turned into table colour (it's inside the table)
+- Wait 10 seconds, start a new test chat, ask about cappuccino again
+[why]
+You didn't change the agent; the new row changed the answer.
+
+This is act 1 again: whoever controls the folder controls what the
+agent knows. Keep the data right and the agent
+stays right, without rebuilding anything.
+[what]
+Every question starts a fresh flow run, and every run reads the file
+as it is now. Nothing is copied into the agent.
+
+Compare that with Knowledge (Kennis): documents there are indexed
+first, so a change shows up later. A flow reads live, every time.
+[quiz]
+You add a row to the table. What must you change in the agent?
+a) Nothing
+b) Republish the agent
+c) Upload the file again
+answer: a
+because: The flow reads the live file on every call. The agent only sees what the flow sends back.
+[help]
+Still 8? The row may be outside the table: it must have the table's
+colour. Drag the small handle at the table's bottom-right corner
+down one row.
+Excel says "Read-only"? Click **Bewerken** (Edit) at the top.

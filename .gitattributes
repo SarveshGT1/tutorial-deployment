@@ -1,0 +1,5 @@
+# Bash must see LF, or Git Bash fails with $'\r': command not found.
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.xlsx binary
+*.png binary

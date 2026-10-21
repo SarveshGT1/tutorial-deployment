@@ -1,0 +1,37 @@
+title: Give the agent a flow it can call
+[do]
+- **Hulpmiddelen** (Tools) → **+ Een hulpmiddel toevoegen** (Add a
+  tool) → **Werkstroom** (Flow) → **Nieuwe agentwerkstroom** (New
+  agent flow)
+- The trigger is already there:
+  **Wanneer een agent de stroom aanroept**
+  (When an agent calls the flow)
+- Click it → **+ Een invoer toevoegen** → **Tekst** → **drankje**
+[why]
+Why not reuse your Handmatig flow? An agent can only call a flow
+that starts with this agent trigger. The engine is the same; only the
+start button differs.
+
+So you build the counting logic twice today: once to test by hand,
+once for the agent. In real work you'd start with the agent trigger.
+[what]
+An agent flow is a Power Automate flow that lives with your agent
+in Copilot Studio. It is deterministic like any flow, and it runs on
+Copilot Studio capacity instead of Power Automate licences.
+
+   Handmatig flow:  [button]        → Excel → you read the output
+   Agent flow:      [agent calls]   → Excel → answer to the agent
+
+The designer opens in Copilot Studio. It's the same designer as in
+Power Automate, so everything from act 2 works here too.
+[quiz]
+Why can't the agent call your Handmatig flow from act 2?
+a) It isn't published yet
+b) It doesn't start with "When an agent calls the flow"
+c) Agents can't read Excel
+answer: b
+because: The agent trigger is the only door an agent can use. Your Handmatig flow is fine; it just has a different door.
+[help]
+The designer opens in a new tab? That's normal. Keep both tabs.
+No "Nieuwe agentwerkstroom"? Look for **Agentstroom** / "Agent flow"
+or **+ Nieuwe stroom** in the Werkstroom panel.

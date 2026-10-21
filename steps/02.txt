@@ -1,0 +1,40 @@
+title: Make the folder, drop in the data
+[do]
+- Press Enter. The script makes the folder **{FOLDER}**
+  in your OneDrive and copies **{FILE}** into it
+- Watch the OneDrive cloud icon in the taskbar: it syncs in seconds
+- If the script can't find OneDrive, it tells you how to upload
+  the file by hand. That works just as well.
+[why]
+The folder you connect is where the agent is born. Whoever can open
+the folder can see what the agent sees: permissions come from the
+library, not from the agent.
+
+That's why you choose the folder first. A tidy folder with one clear
+file gives a reliable agent. A dump of everything gives an agent
+that guesses.
+[what]
+OneDrive for Business is not a separate cloud. It is a SharePoint
+document library on your personal site:
+   gtnl-my.sharepoint.com/personal/<you>
+
+The OneDrive app on your laptop syncs the folder:
+   your laptop  ──>  OneDrive app  ──>  SharePoint library
+
+The script finds the folder through the Windows variable
+OneDriveCommercial. If that's empty it looks for "OneDrive - ...".
+It never overwrites a koffie.xlsx that's already there.
+[quiz]
+OneDrive for Business is...
+a) A separate cloud next to SharePoint
+b) A SharePoint document library on your personal site
+c) A backup of your laptop's C: drive
+answer: b
+because: Your OneDrive lives on gtnl-my.sharepoint.com: the same SharePoint, on a site that belongs to you.
+[help]
+"Can't find OneDrive": upload by hand. In the browser: OneDrive,
+**+ Nieuw** (New), **Map** (Folder), name it {FOLDER}, open it,
+**Uploaden** (Upload), **Bestanden** (Files), pick data/{FILE}.
+"Permission denied" or "busy": koffie.xlsx is open in desktop Excel.
+Close it and press b, then Enter, to retry.
+Red cross on the OneDrive icon: sign in to OneDrive first.

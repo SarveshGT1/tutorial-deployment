@@ -1,0 +1,38 @@
+title: Let the agent pick its tools
+[do]
+- In your agent: **Instellingen** (Settings), top right
+- **Generatieve AI** (Generative AI)
+- Orchestration: **Generatief** / Ja (Yes)
+- **Zoeken op het web** (Web search): **Uit** (Off)
+- **Algemene kennis** (General knowledge): **Uit** (Off), if shown
+- **Opslaan** (Save)
+[why]
+Generative orchestration lets the agent choose which tool to use,
+based on the question and the tool's description. Without it, tools
+only run when a scripted topic tells them to.
+
+With web search and general knowledge off, the agent can only answer
+from your flow. It can't fill gaps from the internet or from what
+the model happens to know.
+[what]
+Two kinds of orchestration:
+- Klassiek: you write topics with trigger phrases; a tool only runs
+  when a topic calls it
+- Generatief: the AI reads your tool descriptions and picks the
+  right one, filling in its inputs from the question
+
+GT agents use generative orchestration with general knowledge and
+web search off. It's the standard setting for our agents, and you'll
+use it again after today.
+[quiz]
+What does generative orchestration do?
+a) It writes the flow for you
+b) It lets the agent choose a tool from its description
+c) It makes the agent search the web
+answer: b
+because: The orchestrator reads tool names and descriptions and picks one. That's why step 12's description matters so much.
+[help]
+Can't find Instellingen? It's the gear icon or the word Settings at
+the top right of the agent page, not of Copilot Studio itself.
+The toggle is greyed out? Your environment may force it. Tell the
+facilitator and continue.

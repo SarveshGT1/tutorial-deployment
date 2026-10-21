@@ -1,0 +1,51 @@
+title: Create your agent, classic style
+open: https://copilotstudio.microsoft.com
+[intro]
+ACT 3 · THE AGENT
+
+Your flow counts. Now an agent will listen, pick the flow, and
+explain the number in plain Dutch.
+
+   Question ──> Agent ──> Tool ──> Flow ──> Excel
+                  ^                          │
+                  └──────── number ──────────┘
+
+The agent never counts by itself. Code calculates, the LLM explains.
+[do]
+- Copilot Studio (opening now): bottom of the left bar **…**
+  → **Open classic experience** (klassieke ervaring)
+- **Agents** → **+ Nieuwe agent** (New agent) → skip the chat:
+  **Configureren** (Configure)
+- Name: **Barista {NAME}**
+- Press Enter here: the instructions go on your clipboard
+- Ctrl+V into **Instructies** (Instructions) → **Maken** (Create)
+[why]
+Classic shows you everything: instructions, tools, topics,
+settings. Each part is a setting you can open and change.
+
+That's why classic is the foundation for complex agents at GT: when
+something goes wrong, you can see where. The newer experience is
+quicker to start, but hides more of the wiring.
+[what]
+A classic agent is four things you set yourself:
+- Instructies: how it behaves (the text on your clipboard)
+- Kennis (Knowledge): documents it may search. Not used today.
+- Hulpmiddelen (Tools): flows and connectors it may call
+- Onderwerpen (Topics): scripted conversations
+
+The instructions say: always use the tool "Koffie tellen", never
+count yourself. Read them after you paste.
+[quiz]
+Why do we build in the classic experience?
+a) It's the only one that can use flows
+b) Every part of the agent is visible and adjustable
+c) It runs on the laptop instead of the cloud
+answer: b
+because: Both experiences run in the cloud and can use flows. Classic shows the wiring, which is what you need for complex agents.
+[help]
+No "Open classic experience"? On the home page use
+**Other ways to build** / **Andere manieren om te bouwen**,
+or **+ Maken** (Create)
+→ **Nieuwe agent** → **Configureren**.
+Clipboard empty? Press b, then Enter on this step again. Or open
+data/instructies.txt in Notepad and copy it from there.

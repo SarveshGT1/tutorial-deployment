@@ -1,0 +1,27 @@
+title: Ask your agent
+[do]
+- Open the test pane: **Testen** (Test), top right
+- Ask:  **Hoeveel cappuccino's zijn er besteld?**
+- Open the **activity map** (Activiteitenkaart): see it call
+  Koffie tellen with drankje = cappuccino
+- Try thee, latte, flat white. Then ask about the weather.
+- Press Enter and type the number the agent gave for cappuccino
+[why]
+This is the first time the whole chain runs: your words, the
+agent's plan, the flow, the file, and back.
+
+The weather question matters too. A good agent says no to what it
+wasn't built for. Yours should answer that it only counts orders.
+[what]
+The activity map shows what the orchestrator did:
+   question → plan → Koffie tellen(drankje: cappuccino)
+            → flow runs → aantal: 8 → answer
+
+If the map shows no tool call, the agent answered from its own
+head. That's the failure to look for in every agent you build.
+[help]
+It doesn't call the tool? Check step 9 (Generatief), the description
+in step 12, then start a new test chat (the refresh icon).
+Error from the flow? Open the flow's run history in Copilot Studio:
+the Excel step's output tells you why.
+Wrong drink filled in? Check the instructions list the six drinks.

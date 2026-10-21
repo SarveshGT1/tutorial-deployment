@@ -1,0 +1,44 @@
+title: Let the flow read the file
+[do]
+- **+** under the trigger → search **Excel**
+  → **Excel Online (Business)**
+  → **Rijen weergeven die aanwezig zijn in een tabel**
+  (List rows present in a table)
+- **Locatie**: OneDrive for Business · **Documentbibliotheek**: OneDrive
+- **Bestand**: folder icon → {FOLDER} → {FILE}
+- **Tabel**: Bestellingen
+- **Geavanceerde parameters** (Advanced) → **Filterquery**, type:
+     Drankje eq '
+  then lightning icon → chip **drankje**, then type  '
+- The result reads:  Drankje eq '[drankje]'  → **Opslaan** (Save)
+[why]
+You let Excel do the filtering, so only matching rows come back.
+Then the flow counts them exactly.
+
+The single quotes matter. They tell Excel "this is a piece of text".
+Without them Excel goes looking for a column called cappuccino.
+[what]
+Filterquery is an OData filter. The Excel connector understands
+one condition with one of these operators:
+   eq  ne  contains  startswith  endswith
+e.g.  Drankje eq 'latte'   or   contains(Naam, 'an')
+
+The action returns at most 256 rows unless you switch on paging
+(Settings → Paginering). Fine for 30 orders; remember it for real
+data.
+
+The first time, Excel asks you to sign in: that's a connection.
+The flow reads the file with your account and your permissions.
+[quiz]
+What does the filter  Drankje eq 'latte'  give back?
+a) The number of lattes
+b) Only the rows where Drankje is latte
+c) Every row, with lattes on top
+answer: b
+because: A filter returns rows, not a number. Counting them is a separate step, which you'll add with length() in act 3.
+[help]
+No Filterquery? Open **Geavanceerde parameters** / "Show all".
+Curly quotes ‘ ’ instead of straight ' '? Delete and retype them
+here, not in Word or Outlook.
+Can't find the file? Wait for sync (step 2) and check the Locatie
+is OneDrive for Business, not SharePoint.

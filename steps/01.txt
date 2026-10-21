@@ -1,0 +1,44 @@
+title: Check in, barista
+[intro]
+ACT 1 · THE DATA
+
+Every agent starts as a folder. Before any AI, there is a place
+where the data lives, and someone who decides what goes in it.
+
+   Site ─── Library ─── Folder ─── File ─── Agent
+
+In this act you make that folder and put an Excel table in it.
+[do]
+- Put this window on the left half of your screen
+- Put your browser on the right half
+- Press **w** for the why, **i** for what happens inside
+- Then press Enter and type your first name
+[why]
+About thirty people build in the same Copilot Studio environment
+today. Your name goes into every flow and agent you make, so you
+can find yours and nobody overwrites anybody else's.
+
+Read the why and what screens. Each one gives you XP, and the quiz
+after every step asks about them.
+[what]
+This script is plain Bash. It runs on your laptop and never talks
+to Microsoft itself. It does four things:
+- copies the workshop Excel file into your OneDrive
+- opens the right web page at the right moment
+- puts the agent instructions on your clipboard
+- checks the numbers your flow and agent give back
+
+Progress is saved in the file .progress next to this script.
+Press q any time; run it again and you continue where you stopped.
+[quiz]
+Where will your agent read its data from?
+a) From this laptop
+b) From a SharePoint library: your OneDrive
+c) From inside Copilot Studio
+answer: b
+because: The script only copies the file. The flow and the agent read it in the cloud, from your OneDrive, and OneDrive for Business is a SharePoint library.
+[help]
+Screen looks garbled (boxes, question marks)? Quit with q and run:
+   bash start.sh --ascii
+Window too small? Drag it bigger: 100 x 34 characters is ideal.
+Something else odd? Run  bash start.sh doctor  and show the result.

@@ -1,0 +1,42 @@
+title: Find your table in Excel
+open: https://gtnl-my.sharepoint.com
+[do]
+- In the browser (opening now): **Mijn bestanden** (My files)
+  → **{FOLDER}** → **{FILE}**
+- It opens in Excel for the web. Click any cell in the data.
+- Tab **Tabelontwerp** (Table Design), far left: the table name
+  is **Bestellingen**
+- Look at the columns: Nr, Naam, Afdeling, Drankje, Suiker
+[why]
+Excel or PDF? It depends on the question.
+
+A table has fixed columns, so code can count it exactly: how many
+cappuccinos, which department, how much sugar. A PDF is text for
+reading: AI can summarise it, but nobody can count from it reliably.
+
+Questions with one right number go in a table. Today's question
+has one right number.
+[what]
+A flow can't read loose cells. It reads named Excel tables. The
+table Bestellingen has 30 rows and 5 columns, and each column
+becomes a field the flow can filter on.
+
+   koffie.xlsx
+     └─ sheet Bestellingen
+          └─ table Bestellingen  (Nr, Naam, Afdeling, Drankje, Suiker)
+
+Your data, typed in plain cells without a table, is invisible to
+Power Automate. Select it and press Ctrl+T to make it a table.
+[quiz]
+When can a flow read rows from an Excel file?
+a) When the data is in a named table
+b) When the file is saved as .csv
+c) When the sheet is called Data
+answer: a
+because: The Excel Online (Business) connector only sees tables. Ctrl+T turns a range into one.
+[help]
+Don't see the folder? Wait 30 seconds for sync, then refresh (F5).
+No Tabelontwerp tab? Click inside the data first. The tab only
+shows when the cursor is in a table.
+Excel opens in the desktop app? Close it and pick
+**Openen in browser** (Open in browser) instead.

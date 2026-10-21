@@ -1,0 +1,52 @@
+title: Start a flow in Power Automate
+open: https://make.powerautomate.com
+[intro]
+ACT 2 · THE FLOW
+
+A flow is deterministic: the same input gives the same output
+every time. There's no AI inside it, so it never guesses. It does
+need a trigger to start.
+
+   Handmatig ───┐
+   Planning ────┤
+   Automatisch ─┼──> Flow ──> Agent
+   Custom ──────┘
+
+In this act you build a flow that counts coffee, and test it by hand.
+[do]
+- In Power Automate (opening now): **+ Maken** (Create)
+- **Direct uitvoerbare cloudstroom** (Instant cloud flow)
+- Name: **Koffie tellen {NAME}**
+- Trigger: **Handmatig een stroom activeren**
+  (Manually trigger a flow) → **Maken** (Create)
+[why]
+A trigger is the start button of a flow. There are four kinds:
+- Handmatig: you press a button (today, for testing)
+- Planning: on a schedule, e.g. every Monday at 07:00
+- Automatisch: an event, e.g. a new e-mail or a new file
+- Custom: another system or an agent calls it
+
+Handmatig is the best start for learning: you decide when it runs,
+and you see every result straight away.
+[what]
+A flow is a trigger followed by actions. It runs in Microsoft's
+cloud, not on your laptop: close your laptop and a scheduled flow
+still runs.
+
+Every run is saved in the run history, with the input and output of
+every action. That history is how you debug a flow, and how you
+prove later what it did.
+[quiz]
+Which of these can NOT start a flow?
+a) A schedule, every morning at 08:00
+b) A new e-mail arriving in a mailbox
+c) The barista's mood
+answer: c
+because: Triggers are events a computer can see: a button, a clock, an e-mail, a file, an agent. Moods don't count (yet).
+[help]
+Can't find Direct uitvoerbare cloudstroom? In English it's
+"Instant cloud flow". Some screens call it "Directe cloudstroom".
+Wrong environment? Top right, **Omgeving** (Environment): pick the
+one the facilitator named. Agents and flows must share it.
+The new designer looks different? That's fine; the steps are the
+same. Old designer: use the toggle at the top right.

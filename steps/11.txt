@@ -1,0 +1,40 @@
+title: Count, then answer the agent
+[do]
+- **+** → the same Excel step as step 6 (file, table, Filterquery
+  Drankje eq '[drankje]' with the chip from THIS trigger)
+- Under **Reageren op de agent** (Respond to the agent):
+  **+ Uitvoer toevoegen** (Add an output) → **Getal** (Number)
+- Name: **aantal**. Value: **fx**, type  length(
+  → **Dynamische inhoud** (Dynamic content)
+  → **value** from the Excel step → type  )
+- **Opslaan** → **Publiceren** (Publish) → name it **Koffie tellen**
+[why]
+The flow does the counting, not the agent. length(value) is
+arithmetic: it can't be wrong, and it can't be talked into another
+number.
+
+Code calculates, the LLM explains. That's the GT house rule, and
+this step is where you build it.
+[what]
+length() counts the items in a list. value is the list of rows the
+Excel step returned, so:
+   length(body('Rijen_weergeven...')?['value'])  →  8
+Picking the chip writes that path for you.
+
+Reageren op de agent sends typed outputs back: text, a number, or
+yes/no. You send one number. Publish creates the version the agent
+calls; unpublished changes are invisible to it.
+[quiz]
+What does length(value) give back here?
+a) The number of rows the filter found
+b) The number of characters in the file
+c) The total of all orders
+answer: a
+because: value is the list of matching rows; length() counts the items in a list.
+[help]
+"Invalid expression"? Pick value from the dynamic content list
+instead of typing the path. Check both brackets are there.
+Chip drankje missing? Use the one from this flow's trigger, not
+from your Handmatig flow.
+Publish fails? Read the red message at the top; usually it's an
+empty required field in the Excel step.
