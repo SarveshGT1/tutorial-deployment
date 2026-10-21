@@ -6,9 +6,6 @@ walks them through 15 steps, one screen at a time, with XP, levels, badges, quiz
 About 45 minutes. A bonus round of three steps (about 10 minutes) then puts the agent in files with the Copilot
 Studio CLI, `pac copilot`: the way GT ships agents.
 
-The guide is also online at https://claude.ai/artifact/En7sNN3xiaU1swAoL7pCpN (private until shared from its Share
-menu). Rebuild it with `python3 tools/build-guide.py --artifact <file>` after editing a step.
-
 ## For participants
 
 Never used Git Bash? [GIT-BASH.md](GIT-BASH.md) covers everything from installing it to running the wizard, in
