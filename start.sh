@@ -5,7 +5,7 @@
 # Windows: double-click start.cmd, or right-click the folder → Open Git Bash here → bash start.sh
 #   bash start.sh doctor     check this laptop, print fixes
 #   bash start.sh --ascii    plain characters, for terminals that show boxes or question marks
-#   bash start.sh --step 8   jump to a step (XP stays)
+#   bash start.sh --step 8   jump to a step (XP stays); 16 to 18 are the bonus round with pac copilot
 #   bash start.sh --reset    start over
 #
 # The texts live in steps/NN.txt (they also build guide/index.html). This file is the engine: it shows
@@ -18,7 +18,8 @@ command -v cygpath >/dev/null 2>&1 && here=$(cygpath -u "$here")
 cd "$(dirname "$here")" || exit 1
 [[ -n "${LANG:-}" ]] || export LANG=en_US.UTF-8
 
-TOTAL=15
+TOTAL=15            # the core steps; 16 to 18 are the bonus round with the Copilot Studio CLI
+LAST=18
 QUIZZES=12          # steps 7, 13 and 15 have a number check instead of a quiz
 FOLDER="GT-Agent-Workshop"
 FILE="koffie.xlsx"
@@ -30,12 +31,12 @@ expected() { case "$1" in cappuccino) echo 8 ;; latte) echo 6 ;; espresso) echo 
 
 LEVELS=(0 400 1000 1600 2300 3000)
 TITLES=(Trainee Assistant Senior Manager Director Partner)
-BADGE_ORDER="DFALQCSP"
+BADGE_ORDER="DFALKQCSP"
 badge_name() { case "$1" in D) echo "Data drop" ;; F) echo "Deterministic" ;; A) echo "Agent born" ;; L) echo "Live data" ;;
-  Q) echo "Quiz master" ;; C) echo "Curious" ;; S) echo "Speedrun" ;; P) echo "Partner" ;; esac; }
+  K) echo "Agent as code" ;; Q) echo "Quiz master" ;; C) echo "Curious" ;; S) echo "Speedrun" ;; P) echo "Partner" ;; esac; }
 badge_why() { case "$1" in D) echo "your data sits in a named table in the cloud" ;; F) echo "your flow counted, the same way twice" ;;
   A) echo "your agent has a tool it can call" ;; L) echo "the data changed, the agent kept up, code agreed" ;;
-  Q) echo "every quiz right the first time" ;; C) echo "read every why and every inside screen" ;;
+  K) echo "your agent is a folder of files, cloned with pac" ;; Q) echo "every quiz right the first time" ;; C) echo "read every why and every inside screen" ;;
   S) echo "finished within 40 minutes" ;; P) echo "reached the top of the ladder" ;; esac; }
 
 # ── options ────────────────────────────────────────────────────────────────
@@ -92,11 +93,11 @@ ask() {
 pause() { ask "${DIM}${1:-Enter to continue}${RESET}"; }
 
 # ── progress ───────────────────────────────────────────────────────────────
-NAME=""; STEP=1; XP=0; BADGES=""; DONE=","; READ=","; QUIZ=","; SEEN=","; QFIRST=0; STREAK=0; START=0
+BOTID=""; NAME=""; STEP=1; XP=0; BADGES=""; DONE=","; READ=","; QUIZ=","; SEEN=","; QFIRST=0; STREAK=0; START=0
 save() {
   { printf 'NAME=%q\nSTEP=%q\nXP=%q\nBADGES=%q\n' "$NAME" "$STEP" "$XP" "$BADGES"
     printf 'DONE=%q\nREAD=%q\nQUIZ=%q\nSEEN=%q\n' "$DONE" "$READ" "$QUIZ" "$SEEN"
-    printf 'QFIRST=%q\nSTREAK=%q\nSTART=%q\n' "$QFIRST" "$STREAK" "$START"; } > "$PROG" 2>/dev/null || true
+    printf 'QFIRST=%q\nSTREAK=%q\nSTART=%q\nBOTID=%q\n' "$QFIRST" "$STREAK" "$START" "$BOTID"; } > "$PROG" 2>/dev/null || true
 }
 load() { [[ -f "$PROG" ]] && . "./$PROG"; return 0; }
 quit() {
@@ -116,7 +117,7 @@ render() {
   sed -e "s/{NAME}/$nm/g" -e "s/{FOLDER}/$FOLDER/g" -e "s/{FILE}/$FILE/g" \
       -e "s/\*\*\([^*]*\)\*\*/$BOLD\1$RESET/g" -e "s/^- /$PURPLE$ARW$RESET /" -e 's/^/  /' | asciify
 }
-act_of() { if (($1 <= 3)); then echo "ACT 1 $DOT THE DATA"; elif (($1 <= 7)); then echo "ACT 2 $DOT THE FLOW"; else echo "ACT 3 $DOT THE AGENT"; fi; }
+act_of() { if (($1 <= 3)); then echo "ACT 1 $DOT THE DATA"; elif (($1 <= 7)); then echo "ACT 2 $DOT THE FLOW"; elif (($1 <= TOTAL)); then echo "ACT 3 $DOT THE AGENT"; else echo "BONUS $DOT THE AGENT AS CODE"; fi; }
 
 # ── XP, levels, badges ─────────────────────────────────────────────────────
 # Messages go straight to the screen, or into TOAST when the screen is about to be redrawn.
@@ -150,7 +151,8 @@ read_reward() {
 
 stepbar() {
   local i s=""
-  for ((i = 1; i <= TOTAL; i++)); do
+  for ((i = 1; i <= LAST; i++)); do
+    ((i == TOTAL + 1)) && s+=" "
     if ((i == STEP)); then s+="$PURPLE$CUR$RESET"; elif [[ "$DONE" == *",$i,"* ]]; then s+="$PURPLE$ON$RESET"; else s+="$DIM$OFF$RESET"; fi
   done
   printf '%s' "$s"
@@ -203,6 +205,86 @@ onedrive_dir() {
   return 1
 }
 
+# ── the Copilot Studio CLI (pac), for the bonus round ─────────────────────
+# The Windows installer puts pac on PATH as pac.cmd, which Git Bash only finds with its extension.
+if ! command -v pac >/dev/null 2>&1 && command -v pac.cmd >/dev/null 2>&1; then pac() { pac.cmd "$@"; }; fi
+has_pac() { type pac >/dev/null 2>&1; }
+# run CMD...: show the command, run it, indent its output. pac.cmd writes CRLF, so \r goes.
+run() {
+  printf '  %s$ %s%s\n' "$PURPLE" "$*" "$RESET"
+  "$@" 2>&1 | tr -d '\r' | sed 's/^/    /'
+  return "${PIPESTATUS[0]}"
+}
+
+install_pac() {
+  if has_pac; then good "pac is installed. On to finding your agent."; return 0; fi
+  warn "pac isn't installed on this laptop yet."
+  if command -v winget >/dev/null 2>&1 || command -v winget.exe >/dev/null 2>&1; then
+    ask "Install it now with winget? (y/n)"
+    case "$REPLY_" in
+      [yY]*) run winget install Microsoft.PowerAppsCLI --accept-source-agreements --accept-package-agreements \
+               || { warn "The install didn't finish. Press h for other ways."; pause; return 1; }
+             good "Installed. Close this window, open a new Git Bash in this folder and run: bash start.sh"
+             say "New programs only show up in new windows. You'll continue right here."
+             save; pause "Enter to close the wizard"; quit ;;
+      *) say "No problem. Press h for other ways to install it."; pause; return 1 ;;
+    esac
+  else
+    say "In PowerShell, run:  winget install Microsoft.PowerAppsCLI"
+    say "Then open a new Git Bash window here and run bash start.sh again."
+    pause; return 1
+  fi
+}
+
+pac_signin() {
+  has_pac || { warn "pac isn't installed yet. Press b to go back to the install step."; pause; return 1; }
+  local who list line
+  who=$(pac org who 2>/dev/null | tr -d '\r')
+  if [[ "$who" != *"Org URL"* ]]; then
+    say "A browser window opens. Sign in with your GT account."
+    run pac auth create || { warn "Sign-in failed. Press h for what the error code means."; pause; return 1; }
+    who=$(pac org who 2>/dev/null | tr -d '\r')
+  fi
+  printf '%s\n' "$who" | grep -E "Org URL|Friendly Name|Environment ID" | sed 's/^ */    /'
+  ask "Is that the workshop environment? (y/n)"
+  if [[ "$REPLY_" == [nN]* ]]; then
+    run pac env list
+    ask "Paste the workshop environment's URL (Shift+Insert):"
+    [[ -n "$REPLY_" ]] && { run pac auth create --environment "$REPLY_" || { warn "Couldn't switch. Press h."; pause; return 1; }; }
+  fi
+  printf '\n  %s$ pac copilot list%s\n' "$PURPLE" "$RESET"
+  list=$(pac copilot list 2>&1 | tr -d '\r')
+  printf '%s\n' "$list" | sed 's/^/    /' 
+  line=$(printf '%s\n' "$list" | grep -i "Barista $NAME" | head -n 1)
+  if [[ -z "$line" ]]; then
+    warn "I can't find Barista $NAME in this environment. Is it the one you built in? Press Enter to try again."
+    return 1
+  fi
+  BOTID=$(printf '%s\n' "$line" | grep -oE '[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}' | head -n 1)
+  good "Found Barista $NAME. Your laptop can reach your agent from code."
+  award 150 "checked by code"; save
+}
+
+clone_agent() {
+  has_pac && [[ -n "$BOTID" ]] || { warn "Do the sign-in step first. Press b."; pause; return 1; }
+  local found tool
+  rm -rf agent-code
+  run pac copilot clone --bot "$BOTID" --output-dir agent-code || { warn "Clone failed. Press h."; pause; return 1; }
+  found=$(find agent-code -name agent.mcs.yml 2>/dev/null | head -n 1)
+  [[ -n "$found" ]] || { warn "The clone has no agent.mcs.yml. Press h."; pause; return 1; }
+  good "Your agent is now a folder of text files:"
+  find agent-code -mindepth 2 -maxdepth 2 | sed 's|^agent-code/[^/]*/|    |' | sort
+  if grep -rqi "barista van de GT-workshop" agent-code; then
+    good "Your instructions are in $(printf '%s' "${found#agent-code/}"), word for word."
+    award 150 "checked by code"; badge K
+  else
+    warn "I couldn't find your instructions text in the clone. Compare it with step 8."
+  fi
+  tool=$(grep -rli "koffie" agent-code/*/actions agent-code/*/workflows 2>/dev/null | head -n 3)
+  [[ -n "$tool" ]] && { say "Koffie tellen lives here:"; printf '%s\n' "$tool" | sed 's|^agent-code/[^/]*/|    |'; }
+  open_path "$PWD/agent-code"
+}
+
 # ── the screen ─────────────────────────────────────────────────────────────
 tab() { # key label panel reward-key
   local mark=""
@@ -215,7 +297,8 @@ draw() {
   level
   printf '\n  %s%s%s GT AGENT WORKSHOP%s' "$BOLD" "$PURPLE" "$CUP" "$RESET"
   [[ -n "$NAME" ]] && printf '   %sBarista %s%s' "$DIM" "$NAME" "$RESET"
-  printf '\n  %s %s%2s/%s%s   %s%s%s %s %s XP   %s\n' "$(stepbar)" "$DIM" "$STEP" "$TOTAL" "$RESET" \
+  local pos="$STEP/$TOTAL"; ((STEP > TOTAL)) && pos="bonus $((STEP - TOTAL))/$((LAST - TOTAL))"
+  printf '\n  %s %s%s%s   %s%s%s %s %s XP   %s\n' "$(stepbar)" "$DIM" "$pos" "$RESET" \
     "$BOLD" "${TITLES[LV]}" "$RESET" "$(xpbar)" "$XP" "$(badgeline)"
   hr
   printf '  %s%s%s\n' "$PURPLE" "$(act_of "$STEP")" "$RESET"
@@ -355,17 +438,21 @@ finish_step() {
     1) ask_name ;;
     2) copy_data || return 1 ;;
     8) copy_instructions ;;
+    16) install_pac || return 1 ;;
+    17) pac_signin || return 1 ;;
+    18) clone_agent || return 1 ;;
   esac
   case "$STEP" in
     7)  gate 7 "How many rows did the flow return for cappuccino?" "$(expected cappuccino)" 100 F || return 1 ;;
     13) gate 13 "What number did the agent give for cappuccino?" "$(expected cappuccino)" 100 "" || return 1 ;;
     15) gate 15 "How many cappuccinos did the agent say after your new row?" $(($(expected cappuccino) + 1)) 250 L || return 1 ;;
+    17) ;;
     *)  quiz ;;
   esac
   case "$DONE" in *",$STEP,"*) ;; *) DONE+="$STEP,"; printf '\n'; award 100 "step $STEP done" ;; esac
   case "$STEP" in 3) badge D ;; 12) badge A ;; esac
   save
-  ((STEP == TOTAL)) || { printf '\n'; pause "Enter for step $((STEP + 1))"; }
+  ((STEP == TOTAL || STEP == LAST)) || { printf '\n'; pause "Enter for step $((STEP + 1))"; }
   return 0
 }
 
@@ -392,14 +479,37 @@ finale() {
     esac
   done
   hr
-  line="Barista $NAME $DOT ${TITLES[LV]} $DOT $XP XP $DOT ${#BADGES}/${#BADGE_ORDER} badges $DOT $mins min"
+  line=$(scoreline "$mins")
   tmp=$(mktemp 2>/dev/null || echo ".score.txt"); printf '%s\n' "$line" > "$tmp"
   if clip "$tmp"; then say "Post your score in the workshop chat. It's on your clipboard:"; else say "Post your score in the workshop chat:"; fi
   printf '  %s%s%s\n\n' "$BOLD" "$line" "$RESET"
   rm -f "$tmp"
   say "Run it again any time: bash start.sh --step 1"
-  [[ -n "${WORKSHOP_LAUNCHER:-}" ]] && { printf '\n'; pause "Enter to close"; }
-  printf '\n'
+}
+scoreline() { level; printf 'Barista %s %s %s %s %s XP %s %s/%s badges %s %s min' "$NAME" "$DOT" "${TITLES[LV]}" "$DOT" "$XP" "$DOT" "${#BADGES}" "${#BADGE_ORDER}" "$DOT" "$1"; }
+closing() { [[ -n "${WORKSHOP_LAUNCHER:-}" ]] && { printf '\n'; pause "Enter to close"; }; printf '\n'; exit 0; }
+
+bonus_offer() {
+  printf '\n'; hr
+  printf '  %s%sBONUS ROUND%s  the Copilot Studio CLI: your agent as code\n' "$REV" "$PURPLE" "$RESET"
+  say "Three more steps, about 10 minutes: install pac, find your agent from"
+  say "Git Bash, clone it to YAML. Worth about 900 XP and the Agent as code badge."
+  ask "Enter to start, q to stop here:"
+  [[ "$REPLY_" == [qQ]* ]] && closing
+  STEP=$((TOTAL + 1)); PANEL=do; save
+}
+
+bonus_finale() {
+  local mins=0 line tmp
+  ((START > 0)) && mins=$((($(date +%s) - START) / 60))
+  printf '\n'; hr
+  printf '  %s%s%s  Agent as code.%s Your agent is in agent-code: files you can\n' "$BOLD" "$PURPLE" "$STAR" "$RESET"
+  say "read, keep in Git and deploy with pac. That's how GT ships agents."
+  line=$(scoreline "$mins")
+  tmp=$(mktemp 2>/dev/null || echo ".score.txt"); printf '%s\n' "$line" > "$tmp"
+  if clip "$tmp"; then say "Your new score is on your clipboard:"; else say "Your new score:"; fi
+  printf '  %s%s%s\n' "$BOLD" "$line" "$RESET"; rm -f "$tmp"
+  closing
 }
 
 # ── doctor: check the laptop, print the fix next to each problem ───────────
@@ -427,6 +537,8 @@ doctor() {
   elif command -v clip.exe >/dev/null 2>&1; then row 0 "Clipboard" "clip.exe"
   elif command -v pbcopy >/dev/null 2>&1; then row 0 "Clipboard" "pbcopy"
   else row 1 "Clipboard" "none" "Step 8 prints the text instead; copy it by hand."; fi
+  if has_pac; then row 0 "Copilot CLI" "pac is installed (bonus round)"
+  else row 1 "Copilot CLI" "pac not installed" "Only needed for the bonus round. Step 16 installs it."; fi
   if command -v explorer.exe >/dev/null 2>&1 || command -v open >/dev/null 2>&1; then row 0 "Browser" "can open links"
   else row 1 "Browser" "can't open links" "Open the links on screen by hand."; fi
   cols=$(tput cols 2>/dev/null || echo 80); lines=$(tput lines 2>/dev/null || echo 24)
@@ -460,9 +572,9 @@ fi
 
 load
 if [[ -n "$JUMP" ]]; then
-  if [[ "$JUMP" =~ ^[0-9]+$ ]] && ((JUMP >= 1 && JUMP <= TOTAL)); then STEP=$JUMP; else printf 'Pick a step from 1 to %s.\n' "$TOTAL"; exit 2; fi
+  if [[ "$JUMP" =~ ^[0-9]+$ ]] && ((JUMP >= 1 && JUMP <= LAST)); then STEP=$JUMP; else printf 'Pick a step from 1 to %s.\n' "$LAST"; exit 2; fi
 fi
-((STEP >= 1 && STEP <= TOTAL)) || STEP=1
+((STEP >= 1 && STEP <= LAST)) || STEP=1
 [[ -z "$NAME" ]] && STEP=1
 PANEL=do; OPENED=","
 
@@ -484,7 +596,8 @@ while true; do
     "")
       if [[ "$PANEL" != do ]]; then PANEL=do; continue; fi
       finish_step || continue
-      if ((STEP == TOTAL)); then finale; exit 0; fi
+      if ((STEP == TOTAL)); then finale; bonus_offer; continue; fi
+      if ((STEP == LAST)); then bonus_finale; fi
       STEP=$((STEP + 1)); save ;;
     *) TOAST="  ${YELLOW}Unknown key '$key'. Use Enter, w, i, h, g, b or q.$RESET"$'\n' ;;
   esac

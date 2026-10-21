@@ -1,0 +1,51 @@
+title: Install the Copilot Studio CLI
+[intro]
+BONUS · THE AGENT AS CODE
+
+Everything you clicked today is stored as text. The Copilot Studio
+CLI, pac copilot, reads that text out and puts it back. It's how GT
+ships agents: written as files, kept in Git, deployed from a laptop.
+
+   Copilot Studio ─── pac ─── YAML files ─── Git ─── pac ─── live
+
+Three bonus steps: install pac, find your agent, clone it to files.
+[do]
+- Press Enter. The script checks whether **pac** is installed
+- Not installed? It offers to install it with **winget**, Windows'
+  own installer. Type y to go ahead.
+- After an install: close this window, open a new Git Bash in the
+  same folder and run  bash start.sh  again. New programs only
+  show up in new windows.
+[why]
+In the browser, an agent is something you click through. As files,
+it's something you can read in one go, compare with yesterday's
+version, review with a colleague, and copy to another environment.
+
+The browser is the right place to learn and to test. The CLI is how
+an agent gets from a laptop into a client environment the same way
+every time.
+[what]
+pac is the Power Platform CLI. Its Copilot Studio commands start
+with  pac copilot :
+   pac copilot list      the agents in an environment
+   pac copilot clone     an agent as a folder of YAML files
+   pac copilot pack      a folder as a solution you can import
+   pac copilot publish   publish an agent
+   pac copilot push      send a cloned folder's changes back
+
+On Windows it installs as pac.cmd. Git Bash only finds that with its
+extension, so this script calls it for you either way.
+No winget? The VS Code extension Power Platform Tools ships pac too.
+[quiz]
+What does the Copilot Studio CLI give you that the browser doesn't?
+a) A faster chat with your agent
+b) The agent as files you can read, keep in Git and deploy again
+c) A second copy of Excel
+answer: b
+because: The agent itself is the same. The CLI turns it into files, which is what makes review, version history and repeatable deploys possible.
+[help]
+"winget is not recognized"? Install pac in PowerShell instead:
+   winget install Microsoft.PowerAppsCLI
+or use the VS Code extension Power Platform Tools.
+Installed, but the script still can't find pac? Close every Git Bash
+window and open a new one. PATH changes only reach new windows.

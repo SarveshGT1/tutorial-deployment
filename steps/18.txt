@@ -1,0 +1,39 @@
+title: Clone your agent to files
+[do]
+- Press Enter. The script runs  pac copilot clone  and writes your
+  agent into the folder **agent-code** next to this script
+- Explorer opens the folder. Open **agent.mcs.yml** in Notepad:
+  your instructions are in there, word for word
+- Look in **actions** and **workflows**: that's Koffie tellen
+[why]
+This folder is your agent. Put it in Git and every change gets a
+date, an author and a diff. A colleague can review a change before
+it goes live, the same way code gets reviewed.
+
+That's how GT's own agents are built: written as YAML, kept in Git,
+and deployed from a laptop with pac.
+[what]
+A cloned agent is a handful of YAML files and folders:
+   agent.mcs.yml                  instructions and main settings
+   settings.mcs.yml               name, sign-in and AI settings
+   connectionreferences.mcs.yml   which connections it uses
+   topics/  actions/  workflows/  topics, tools and flows
+
+Change a file, then  pac copilot push  sends it back to the agent
+this folder came from, and  pac copilot publish  makes it live.
+A folder that never came from an agent goes in another way:
+pac copilot pack, then pac solution import.
+[quiz]
+You change agent.mcs.yml in your cloned folder. What sends the change
+back to your agent?
+a) Saving the file
+b) pac copilot push
+c) pac copilot list
+answer: b
+because: Saving only changes the file on your laptop. push sends it to the agent the folder came from; publish then makes it live.
+[help]
+"Clone failed"? Check step 17 found your agent; press b and do it
+again if not.
+The folder is empty? Wait a minute after publishing the agent in
+step 12, then run this step again.
+Want to see it in VS Code? Right-click agent-code, Open with Code.

@@ -103,6 +103,29 @@ Publish the flow, then remove the tool from the agent and add it again. The agen
 The new row must be inside the table: it gets the table's colour. If it doesn't, drag the small handle at the
 table's bottom-right corner down one row. Then start a new test chat.
 
+## Bonus · the Copilot Studio CLI
+
+### "pac: command not found" right after installing
+Programs you install only show up in new windows. Close every Git Bash window, open a new one in the workshop
+folder, and run `bash start.sh` again. You continue at the same step.
+
+### winget isn't there or is blocked
+Install pac with the VS Code extension **Power Platform Tools** instead; it ships pac without an installer.
+
+### `AADSTS50078` or "multi-factor authentication has expired"
+Your sign-in aged out. Run `pac auth create` again (or press Enter on step 17) and finish the prompt in the browser.
+
+### `AADSTS530035`
+GT's sign-in rules block this device or app for pac. Only IT can change that. The rest of the workshop works
+without the CLI.
+
+### My agent isn't in `pac copilot list`
+pac is signed in to another environment. Run `pac env list`, copy the workshop environment's URL, then
+`pac auth create --environment <that URL>`. `pac org who` shows where you are now.
+
+### The clone fails or the folder is empty
+Make sure the agent is published (step 12), wait a minute, and run step 18 again.
+
 ## Still stuck
 
 Run `bash start.sh doctor`, take a screenshot of it, and wave at the facilitator.

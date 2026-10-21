@@ -24,6 +24,13 @@ admin rights.
 3. Click **Git for Windows**, then **Install** (Installeren). It takes a few minutes.
 4. Can't find it in the Software Center? Ask the facilitator before the workshop, not during it.
 
+Not in the Software Center? On GT laptops `winget`, Windows' own installer, works too. Open **PowerShell** (Windows key,
+type `PowerShell`, Enter) and run:
+```
+winget install --id Git.Git -e
+```
+Then open Git Bash from the Start menu.
+
 On a laptop where you're allowed to install software yourself, you can also download the installer from
 `https://git-scm.com/download/win`. Click **Next** on every screen: the default choices are right for this
 workshop. Two of them matter, so leave them as they are:
@@ -163,9 +170,32 @@ bash start.sh --reset     # start over from zero
 bash start.sh --help      # this list
 ```
 
-## 8. After the workshop
+## 8. Bonus: the Copilot Studio CLI
+
+After step 15 the wizard offers a bonus round with the Copilot Studio CLI, `pac copilot`. It's part of the Power
+Platform CLI, and it's how GT ships agents: written as YAML files, kept in Git, deployed from a laptop. In three
+steps you install it, find your own agent from Git Bash, and clone that agent into a folder of text files. The
+wizard runs every command for you and shows it first, so you see exactly what was typed.
+
+Want to try the commands yourself afterwards? These are the ones the bonus round uses:
+```
+winget install Microsoft.PowerAppsCLI      # once, then open a NEW Git Bash window
+pac auth create                            # sign in; a browser window opens
+pac org who                                # which environment am I in?
+pac env list                               # all environments, with their URLs
+pac copilot list                           # the agents in this environment
+pac copilot clone --bot <id> --output-dir agent-code
+```
+
+Two things that trip people up:
+- **pac isn't found right after installing.** Close every Git Bash window and open a new one. Programs you
+  install only show up in new windows.
+- **Your agent isn't in `pac copilot list`.** You're signed in to another environment. Run `pac env list`, copy
+  the workshop environment's URL, and run `pac auth create --environment <that URL>`.
+
+## 9. After the workshop
 
 - Your agent and flows stay in the workshop environment. Delete them there if the facilitator asks you to.
 - `bash start.sh --reset` wipes your progress on the laptop. Deleting the `tutorial-deployment` folder removes
-  everything else.
+  everything else, including the cloned `agent-code` folder.
 - The copy of `koffie.xlsx` in your OneDrive folder `GT-Agent-Workshop` is yours to keep or delete.

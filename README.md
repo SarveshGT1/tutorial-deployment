@@ -3,7 +3,11 @@
 This is the hands-on part of the GT builders workshop. Each participant goes from an empty folder to a working Copilot Studio
 agent that answers "Hoeveel cappuccino's zijn er besteld?" from an Excel file in their OneDrive. A Git Bash wizard
 walks them through 15 steps, one screen at a time, with XP, levels, badges, quizzes and three number checks.
-About 45 minutes.
+About 45 minutes. A bonus round of three steps (about 10 minutes) then puts the agent in files with the Copilot
+Studio CLI, `pac copilot`: the way GT ships agents.
+
+The guide is also online at https://claude.ai/artifact/En7sNN3xiaU1swAoL7pCpN (private until shared from its Share
+menu). Rebuild it with `python3 tools/build-guide.py --artifact <file>` after editing a step.
 
 ## For participants
 
@@ -52,6 +56,9 @@ matters), **Inside** (what happens under the hood) and **Stuck?** (fixes). Twelv
 | | 13 | Ask the agent; the script checks its answer (8) |
 | | 14 | Add a cappuccino row in Excel; the agent changes its answer without being touched |
 | | 15 | The script checks the new answer (9) |
+| Bonus · the agent as code | 16 | Install the Copilot Studio CLI (`winget install Microsoft.PowerAppsCLI`) |
+| | 17 | `pac auth create`, then `pac copilot list`; the script finds "Barista <name>" |
+| | 18 | `pac copilot clone` into `agent-code/`; the script finds the instructions in the YAML |
 
 **Why two flows.** An agent can only call a flow that starts with **Wanneer een agent de stroom aanroept**. The
 Handmatig flow in act 2 is for testing by hand; act 3 builds the same logic behind the agent trigger.
@@ -65,11 +72,12 @@ Handmatig flow in act 2 is for testing by hand; act 3 builds the same logic behi
 | quiz right first time / second time | +50 / +20 |
 | quiz streak | +10 per quiz in a row, max +50 |
 | checks at steps 7 and 13 / step 15 | +100 / +250 (half after a wrong try) |
+| bonus: agent found with pac (17), agent cloned (18) | +150 each |
 | every badge | +50 |
 
 Levels: Trainee 0 · Assistant 400 · Senior 1000 · Manager 1600 · Director 2300 · Partner 3000. A perfect run
-scores 3700. Badges: Data drop, Deterministic, Agent born, Live data, Quiz master, Curious, Speedrun (within 40
-minutes), Partner. The final screen puts a one-line score on the clipboard to post in the workshop chat.
+scores 3700 after step 15 and 4610 with the bonus round. Badges: Data drop, Deterministic, Agent born, Live data,
+Quiz master, Curious, Speedrun (within 40 minutes), Partner, and Agent as code from the bonus round. The final screen puts a one-line score on the clipboard to post in the workshop chat.
 
 ## Windows details
 
@@ -87,7 +95,8 @@ minutes), Partner. The final screen puts a one-line score on the clipboard to po
 - [ ] Put the zip in the workshop Teams channel.
 - [ ] Everyone can create flows and agents in the workshop environment.
 - [ ] The DLP policy allows Excel Online (Business) in that environment.
-- [ ] One dry run on a GT laptop, steps 1 to 15, with `bash start.sh doctor` first.
+- [ ] One dry run on a GT laptop, steps 1 to 18, with `bash start.sh doctor` first.
+- [ ] Write the workshop environment's URL on the board (`pac env list` shows it). Step 17 asks for it.
 
 **Check in the GT tenant (about 10 minutes; none of this is verified yet)**
 - [ ] `https://gtnl-my.sharepoint.com` lands on your own OneDrive (steps 2 and 3).
@@ -104,13 +113,13 @@ Fix a label in `steps/NN.txt`, then run `python3 tools/build-guide.py` so the gu
 GIT-BASH.md            the full Git Bash tutorial for participants, from install to first screen
 start.cmd              double-click launcher (Windows)
 start.sh               the wizard: screens, XP, quizzes, checks, doctor
-steps/01.txt … 15.txt  the step texts: Do, Why, Inside, quiz, Stuck? (single source)
+steps/01.txt … 18.txt  the step texts: Do, Why, Inside, quiz, Stuck? (16 to 18 are the pac bonus round)
 guide/index.html       the visual guide, built from steps/ and TROUBLESHOOTING.md
 guide/img/             GT logo, Microsoft icons, three Microsoft Learn screenshots
 data/koffie.xlsx       30 synthetic orders in table Bestellingen (Nr, Naam, Afdeling, Drankje, Suiker)
 data/instructies.txt   the agent instructions (Dutch)
 tools/build-guide.py   steps/ → guide/index.html
-tools/test-wizard.sh   plays all 15 steps with CRLF input and checks the ending
+tools/test-wizard.sh   plays all 18 steps with CRLF input and a stand-in pac, and checks the ending
 ```
 
 ## Answer key (code calculates)

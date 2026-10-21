@@ -1,0 +1,31 @@
+title: Sign in and find your agent
+[do]
+- Press Enter. The script runs  pac auth create : a browser window
+  asks you to sign in with your GT account
+- It shows which environment you're signed in to. Not the workshop
+  environment? Answer n, and paste its URL from the list
+- It runs  pac copilot list  and looks for **Barista {NAME}**
+[why]
+If pac can list your agent, your laptop can reach the environment
+from code: your account, your licence and GT's sign-in rules all
+said yes. Everything else in the CLI builds on this one check.
+
+It's also the first thing to try on any new laptop or environment,
+before you build anything on top of it.
+[what]
+pac auth create stores a sign-in profile for your Windows account.
+Every pac command after that uses it until you sign in again.
+   pac org who        which environment you're signed in to
+   pac env list       every environment you can reach, with URLs
+   pac auth create --environment <url>   switch to another one
+
+An environment URL looks like  https://<org>.crm4.dynamics.com .
+pac copilot list shows the same agents as the Agents page in
+Copilot Studio, for one environment at a time.
+[help]
+AADSTS50078 in the error? Your sign-in expired. Run the step again
+and finish the multi-factor prompt in the browser.
+AADSTS530035? GT's sign-in rules block this device or app. Only IT
+can change that; the rest of the workshop still works without pac.
+Your agent isn't in the list? You're in another environment: answer
+n and paste the workshop environment's URL.

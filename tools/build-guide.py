@@ -5,12 +5,14 @@ text into the visual guide. Run after editing a step:   python3 tools/build-guid
 """
 import html
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ACTS = {1: ("Act 1", "The data", "SharePoint · OneDrive · Excel"),
         4: ("Act 2", "The flow", "Power Automate"),
-        8: ("Act 3", "The agent", "Copilot Studio, classic")}
+        8: ("Act 3", "The agent", "Copilot Studio, classic"),
+        16: ("Act 4 · bonus", "The agent as code", "Copilot Studio CLI · pac copilot")}
 SHOTS = {8: ("shot_topic.png", "A topic in the classic authoring canvas: every part of the agent is visible."),
          11: ("shot_flow.png", "An agent flow in the designer: a trigger, steps, and an answer back to the agent."),
          13: ("shot_map.png", "The activity map: which tool the agent picked, and with which inputs.")}
@@ -130,11 +132,32 @@ def ladder():
     return f'<svg viewBox="0 0 880 80" role="img" aria-label="Levels from Trainee to Partner">{"".join(p)}</svg>'
 
 
+CHEATSHEET = """<div class="cheat"><div class="k">pac copilot cheat sheet</div><table class="md">
+<tr><th>command</th><th>what it does</th></tr>
+<tr><td><code>winget install Microsoft.PowerAppsCLI</code></td><td>installs pac, once (then open a new Git Bash window)</td></tr>
+<tr><td><code>pac auth create</code></td><td>signs you in; a browser window opens</td></tr>
+<tr><td><code>pac org who</code></td><td>shows which environment you're signed in to</td></tr>
+<tr><td><code>pac env list</code></td><td>every environment you can reach, with its URL</td></tr>
+<tr><td><code>pac auth create --environment &lt;url&gt;</code></td><td>switches to another environment</td></tr>
+<tr><td><code>pac copilot list</code></td><td>the agents in that environment</td></tr>
+<tr><td><code>pac copilot clone --bot &lt;id&gt; --output-dir &lt;folder&gt;</code></td><td>writes an agent out as YAML files</td></tr>
+<tr><td><code>pac copilot push</code></td><td>sends a cloned folder's changes back to its agent</td></tr>
+<tr><td><code>pac copilot publish --bot &lt;id&gt;</code></td><td>publishes the agent</td></tr>
+<tr><td><code>pac copilot pack</code> + <code>pac solution import</code></td><td>brings in an agent that was written as files from scratch</td></tr>
+</table></div>"""
+
 DIAGRAMS = {
     1: ('<figure class="dia">' + stations(["Site", "Library", "Folder", "File", "Agent"],
                                           ["gtnl-my.sharepoint.com", "OneDrive", "GT-Agent-Workshop", "koffie.xlsx", "Barista"])
         + '<figcaption>The folder you connect is where the agent is born.</figcaption></figure>'),
     4: '<figure class="dia">' + fan() + '<figcaption>Four kinds of trigger. Today you use Handmatig, then Agent.</figcaption></figure>',
+    16: ('<figure class="dia">' + stations(["Your agent", "Clone", "YAML folder", "Git", "Push"],
+                                           ["in Copilot Studio", "pac copilot clone", "agent.mcs.yml, topics/", "review, history", "pac copilot push"])
+         + '<figcaption>The round trip: the same agent, as files you can read, review and send back.</figcaption></figure>'
+         '<figure class="dia">' + stations(["Write", "Keep", "Deploy", "Live"],
+                                           ["YAML on any laptop", "GitHub", "pac on the GT laptop", "GT environment"])
+         + '<figcaption>How GT ships agents today: written as YAML, kept in Git, deployed with pac.</figcaption></figure>'
+         + CHEATSHEET),
     8: ('<figure class="dia">' + loop() + '<figcaption>Code calculates, the LLM explains.</figcaption></figure>'
         '<figure class="dia">' + two_flows() + '<figcaption>Why you build the count twice: the steps are the same, the start and the end differ.</figcaption></figure>'),
 }
@@ -203,9 +226,10 @@ def step_html(n, meta, sec):
     if n in SHOTS:
         f, cap = SHOTS[n]
         shot = f'<figure class="shot"><img src="img/{f}" alt="{html.escape(cap)}" loading="lazy"><figcaption>{cap} Example from Microsoft Learn.</figcaption></figure>'
+    num = f"{n:02d}" if n <= 15 else f'B{n - 15}'
     return f"""
 <section class="step" id="step-{n}">
-  <div class="num">{n:02d}</div>
+  <div class="num">{num}</div>
   <div class="body">
     <h3>{inline(meta["title"])}</h3>
     <div class="do"><div class="k">Do</div>{block(sec.get("do", []))}</div>
@@ -236,6 +260,13 @@ def main():
         .replace("__ICONS__", icon("sharepoint.svg", "SharePoint") + '<i></i>' + icon("excel.svg", "Excel") + '<i></i>'
                  + icon("power-automate.svg", "Power Automate") + '<i></i>' + icon("copilot-studio.svg", "Copilot Studio"))
     (ROOT / "guide" / "index.html").write_text(page, encoding="utf-8")
+    if len(sys.argv) == 3 and sys.argv[1] == "--artifact":
+        # A claude.ai artifact brings its own <html>, <head> and <body>: keep the title, styles and content.
+        body = page.split("<body>", 1)[1].split("</body>", 1)[0]
+        head = page.split("<head>", 1)[1].split("</head>", 1)[0]
+        head = "\n".join(l for l in head.splitlines() if not l.startswith("<meta"))
+        head = head.replace(":root{", ":root{color-scheme:light;", 1)
+        Path(sys.argv[2]).write_text('<meta name="claude:viewport-fit-sides" content="cover">\n' + head + body, encoding="utf-8")
     print(f"guide/index.html: {len(steps)} steps, {len(page) // 1024} KB")
 
 
@@ -244,7 +275,7 @@ TEMPLATE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Build a barista · GT agent workshop</title>
+<title>Build a Barista</title>
 <style>
 :root{--ink:#1D1D1F;--ink2:#6E6E73;--ink3:#A1A1A6;--line:#D9D6E0;--gt:#4F2D7F;--tint:#F6F3FA;--ok:#1E7B4A;--bad:#B42318;--bg:#fff}
 *{box-sizing:border-box}
@@ -252,7 +283,7 @@ html{scroll-behavior:smooth;scroll-padding-top:64px}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
 p,h1,h2,h3,h4,ul,pre,figure{margin:0}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
-nav.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
 nav.top .wrap{display:flex;align-items:center;gap:24px;height:56px}
 nav.top img{height:22px;width:auto}
 nav.top .steps{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
@@ -334,6 +365,10 @@ table.md td:last-child{text-align:left;color:#3A3A3C;white-space:normal;padding-
 .trouble ol li+li,.trouble ul li+li{margin-top:4px}
 .trouble a{color:var(--gt)}
 .gitbash{border-top:0;padding-top:72px;border-bottom:1px solid var(--line)}
+.cheat{margin-top:48px}
+.cheat table.md td:first-child{white-space:nowrap;padding-right:24px}
+.cheat .md{max-width:none}
+@media (max-width:760px){.cheat{overflow-x:auto}}
 .trouble h3{font-size:22px;margin-top:48px;letter-spacing:-.01em}
 .trouble h4{font-size:17px;margin-top:28px}
 .trouble p,.trouble ul{color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
@@ -360,7 +395,7 @@ footer img{height:26px;width:auto}
   <section class="hero">
     <div class="eb">GT agent workshop · for builders</div>
     <h1>Build a barista.</h1>
-    <p class="sub">From an empty folder to a working Copilot Studio agent in 15 steps. A Git Bash wizard walks you through it one screen at a time, and code checks the numbers your flow and agent give back.</p>
+    <p class="sub">From an empty folder to a working Copilot Studio agent in 15 steps. A Git Bash wizard walks you through it one screen at a time, and code checks the numbers your flow and agent give back. The bonus round puts your agent in files with the Copilot Studio CLI.</p>
     <div class="icons">__ICONS__</div>
   </section>
 
@@ -391,10 +426,11 @@ __GITBASH__
           <tr><td>Streak: quizzes right first time in a row</td><td>+10 per streak, max +50</td></tr>
           <tr><td>Check: flow rows (step 7), agent answer (13)</td><td>+100 each</td></tr>
           <tr><td>Final check: the agent after your new row (15)</td><td>+250</td></tr>
+          <tr><td>Bonus: find your agent with pac (17), clone it (18)</td><td>+150 each</td></tr>
           <tr><td>Every badge</td><td>+50</td></tr>
         </table>
       </div>
-      <div><div class="k">Eight badges</div>
+      <div><div class="k">Nine badges</div>
         <table class="badges">
           <tr><td>Data drop</td><td>Your data sits in a named table in the cloud</td></tr>
           <tr><td>Deterministic</td><td>Your flow counted, the same way twice</td></tr>
@@ -404,6 +440,7 @@ __GITBASH__
           <tr><td>Curious</td><td>Read every Why and every Inside screen</td></tr>
           <tr><td>Speedrun</td><td>Finished within 40 minutes</td></tr>
           <tr><td>Partner</td><td>Reached the top of the ladder</td></tr>
+          <tr><td>Agent as code</td><td>Your agent is a folder of files, cloned with pac</td></tr>
         </table>
       </div>
     </div>

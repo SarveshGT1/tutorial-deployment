@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Build a barista · GT agent workshop</title>
+<title>Build a Barista</title>
 <style>
 :root{--ink:#1D1D1F;--ink2:#6E6E73;--ink3:#A1A1A6;--line:#D9D6E0;--gt:#4F2D7F;--tint:#F6F3FA;--ok:#1E7B4A;--bad:#B42318;--bg:#fff}
 *{box-sizing:border-box}
@@ -11,7 +11,7 @@ html{scroll-behavior:smooth;scroll-padding-top:64px}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
 p,h1,h2,h3,h4,ul,pre,figure{margin:0}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
-nav.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line)}
 nav.top .wrap{display:flex;align-items:center;gap:24px;height:56px}
 nav.top img{height:22px;width:auto}
 nav.top .steps{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none;min-width:0}
@@ -93,6 +93,10 @@ table.md td:last-child{text-align:left;color:#3A3A3C;white-space:normal;padding-
 .trouble ol li+li,.trouble ul li+li{margin-top:4px}
 .trouble a{color:var(--gt)}
 .gitbash{border-top:0;padding-top:72px;border-bottom:1px solid var(--line)}
+.cheat{margin-top:48px}
+.cheat table.md td:first-child{white-space:nowrap;padding-right:24px}
+.cheat .md{max-width:none}
+@media (max-width:760px){.cheat{overflow-x:auto}}
 .trouble h3{font-size:22px;margin-top:48px;letter-spacing:-.01em}
 .trouble h4{font-size:17px;margin-top:28px}
 .trouble p,.trouble ul{color:#3A3A3C;font-size:16px;margin-top:6px;max-width:760px}
@@ -114,12 +118,12 @@ footer img{height:26px;width:auto}
 </style>
 </head>
 <body>
-<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a class="w" href="#git-bash">Setup</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a><a href="#step-12">12</a><a href="#step-13">13</a><a href="#step-14">14</a><a href="#step-15">15</a><a class="w" href="#troubleshooting">Help</a></div></div></nav>
+<nav class="top"><div class="wrap"><img src="img/logo.png" alt="Grant Thornton"><div class="steps"><a class="w" href="#git-bash">Setup</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a><a href="#step-12">12</a><a href="#step-13">13</a><a href="#step-14">14</a><a href="#step-15">15</a><a href="#step-16">16</a><a href="#step-17">17</a><a href="#step-18">18</a><a class="w" href="#troubleshooting">Help</a></div></div></nav>
 <main class="wrap">
   <section class="hero">
     <div class="eb">GT agent workshop · for builders</div>
     <h1>Build a barista.</h1>
-    <p class="sub">From an empty folder to a working Copilot Studio agent in 15 steps. A Git Bash wizard walks you through it one screen at a time, and code checks the numbers your flow and agent give back.</p>
+    <p class="sub">From an empty folder to a working Copilot Studio agent in 15 steps. A Git Bash wizard walks you through it one screen at a time, and code checks the numbers your flow and agent give back. The bonus round puts your agent in files with the Copilot Studio CLI.</p>
     <div class="icons"><img src="img/sharepoint.svg" alt="SharePoint" width="56" height="56"><i></i><img src="img/excel.svg" alt="Excel" width="56" height="56"><i></i><img src="img/power-automate.svg" alt="Power Automate" width="56" height="56"><i></i><img src="img/copilot-studio.svg" alt="Copilot Studio" width="56" height="56"></div>
   </section>
 
@@ -140,6 +144,9 @@ footer img{height:26px;width:auto}
 <h3>2. Install Git for Windows</h3>
 <p>Git Bash is part of Git for Windows. On a GT laptop you install it from the Software Center, which doesn't need admin rights.</p>
 <ol><li>Press the <b>Windows key</b>, type <code>Software Center</code> (Softwarecentrum) and open it.</li><li>Search for <code>Git</code>.</li><li>Click <b>Git for Windows</b>, then <b>Install</b> (Installeren). It takes a few minutes.</li><li>Can't find it in the Software Center? Ask the facilitator before the workshop, not during it.</li></ol>
+<p>Not in the Software Center? On GT laptops <code>winget</code>, Windows' own installer, works too. Open <b>PowerShell</b> (Windows key, type <code>PowerShell</code>, Enter) and run:</p>
+<pre>winget install --id Git.Git -e</pre>
+<p>Then open Git Bash from the Start menu.</p>
 <p>On a laptop where you're allowed to install software yourself, you can also download the installer from <code>https://git-scm.com/download/win</code>. Click <b>Next</b> on every screen: the default choices are right for this workshop. Two of them matter, so leave them as they are:</p>
 <ul><li><b>Git Bash Here</b> stays ticked. It adds "Open Git Bash here" to the right-click menu.</li><li><b>Use MinTTY</b> stays selected. MinTTY is the window Git Bash runs in, with colours and proper copy and paste.</li></ul>
 <p><b>Check it worked.</b> Open Git Bash (Windows key, type <code>Git Bash</code>, Enter) and type:</p>
@@ -189,8 +196,19 @@ git clone https://github.com/SarveshGT1/tutorial-deployment.git</pre>
 bash start.sh --ascii     # plain characters, if you see boxes or question marks
 bash start.sh --reset     # start over from zero
 bash start.sh --help      # this list</pre>
-<h3>8. After the workshop</h3>
-<ul><li>Your agent and flows stay in the workshop environment. Delete them there if the facilitator asks you to.</li><li><code>bash start.sh --reset</code> wipes your progress on the laptop. Deleting the <code>tutorial-deployment</code> folder removes everything else.</li><li>The copy of <code>koffie.xlsx</code> in your OneDrive folder <code>GT-Agent-Workshop</code> is yours to keep or delete.</li></ul>
+<h3>8. Bonus: the Copilot Studio CLI</h3>
+<p>After step 15 the wizard offers a bonus round with the Copilot Studio CLI, <code>pac copilot</code>. It's part of the Power Platform CLI, and it's how GT ships agents: written as YAML files, kept in Git, deployed from a laptop. In three steps you install it, find your own agent from Git Bash, and clone that agent into a folder of text files. The wizard runs every command for you and shows it first, so you see exactly what was typed.</p>
+<p>Want to try the commands yourself afterwards? These are the ones the bonus round uses:</p>
+<pre>winget install Microsoft.PowerAppsCLI      # once, then open a NEW Git Bash window
+pac auth create                            # sign in; a browser window opens
+pac org who                                # which environment am I in?
+pac env list                               # all environments, with their URLs
+pac copilot list                           # the agents in this environment
+pac copilot clone --bot &lt;id&gt; --output-dir agent-code</pre>
+<p>Two things that trip people up:</p>
+<ul><li><b>pac isn't found right after installing.</b> Close every Git Bash window and open a new one. Programs you install only show up in new windows.</li><li><b>Your agent isn't in <code>pac copilot list</code>.</b> You're signed in to another environment. Run <code>pac env list</code>, copy the workshop environment's URL, and run <code>pac auth create --environment &lt;that URL&gt;</code>.</li></ul>
+<h3>9. After the workshop</h3>
+<ul><li>Your agent and flows stay in the workshop environment. Delete them there if the facilitator asks you to.</li><li><code>bash start.sh --reset</code> wipes your progress on the laptop. Deleting the <code>tutorial-deployment</code> folder removes everything else, including the cloned <code>agent-code</code> folder.</li><li>The copy of <code>koffie.xlsx</code> in your OneDrive folder <code>GT-Agent-Workshop</code> is yours to keep or delete.</li></ul>
   </section>
 
   <section class="xp">
@@ -207,10 +225,11 @@ bash start.sh --help      # this list</pre>
           <tr><td>Streak: quizzes right first time in a row</td><td>+10 per streak, max +50</td></tr>
           <tr><td>Check: flow rows (step 7), agent answer (13)</td><td>+100 each</td></tr>
           <tr><td>Final check: the agent after your new row (15)</td><td>+250</td></tr>
+          <tr><td>Bonus: find your agent with pac (17), clone it (18)</td><td>+150 each</td></tr>
           <tr><td>Every badge</td><td>+50</td></tr>
         </table>
       </div>
-      <div><div class="k">Eight badges</div>
+      <div><div class="k">Nine badges</div>
         <table class="badges">
           <tr><td>Data drop</td><td>Your data sits in a named table in the cloud</td></tr>
           <tr><td>Deterministic</td><td>Your flow counted, the same way twice</td></tr>
@@ -220,6 +239,7 @@ bash start.sh --help      # this list</pre>
           <tr><td>Curious</td><td>Read every Why and every Inside screen</td></tr>
           <tr><td>Speedrun</td><td>Finished within 40 minutes</td></tr>
           <tr><td>Partner</td><td>Reached the top of the ladder</td></tr>
+          <tr><td>Agent as code</td><td>Your agent is a folder of files, cloned with pac</td></tr>
         </table>
       </div>
     </div>
@@ -506,6 +526,82 @@ thee 4 · chocomel 3 · flat white 4</pre>
     <details><summary>Stuck?</summary><p>8? The row isn't in the table yet, or you asked in the old chat. Way off? The agent counted by itself: check step 9 and the tool description in step 12. 0? The Filterquery quotes or spelling (step 6 and step 11).</p></details>
   </div>
 </section>
+<header class="act" id="act-4"><div class="eb">Act 4 · bonus · Copilot Studio CLI · pac copilot</div><h2>The agent as code.</h2><p>Everything you clicked today is stored as text. The Copilot Studio CLI, pac copilot, reads that text out and puts it back. It's how GT ships agents: written as files, kept in Git, deployed from a laptop.</p>
+<p>Three bonus steps: install pac, find your agent, clone it to files.</p><figure class="dia"><svg viewBox="0 0 880 90" role="img" aria-label="Your agent to Clone to YAML folder to Git to Push"><line x1="100" y1="46" x2="780" y2="46" class="rail"/><line x1="100" y1="46" x2="780" y2="46" class="seg"/><line x1="100.0" y1="39" x2="100.0" y2="53" class="tick"/><text x="100.0" y="28" class="lab">Your agent</text><text x="100.0" y="74" class="sub">in Copilot Studio</text><line x1="270.0" y1="39" x2="270.0" y2="53" class="tick"/><text x="270.0" y="28" class="lab">Clone</text><text x="270.0" y="74" class="sub">pac copilot clone</text><line x1="440.0" y1="39" x2="440.0" y2="53" class="tick"/><text x="440.0" y="28" class="lab">YAML folder</text><text x="440.0" y="74" class="sub">agent.mcs.yml, topics/</text><line x1="610.0" y1="39" x2="610.0" y2="53" class="tick"/><text x="610.0" y="28" class="lab">Git</text><text x="610.0" y="74" class="sub">review, history</text><line x1="780.0" y1="39" x2="780.0" y2="53" class="tick"/><text x="780.0" y="28" class="lab">Push</text><text x="780.0" y="74" class="sub">pac copilot push</text></svg><figcaption>The round trip: the same agent, as files you can read, review and send back.</figcaption></figure><figure class="dia"><svg viewBox="0 0 880 90" role="img" aria-label="Write to Keep to Deploy to Live"><line x1="100" y1="46" x2="780" y2="46" class="rail"/><line x1="100" y1="46" x2="780" y2="46" class="seg"/><line x1="100.0" y1="39" x2="100.0" y2="53" class="tick"/><text x="100.0" y="28" class="lab">Write</text><text x="100.0" y="74" class="sub">YAML on any laptop</text><line x1="326.66666666666663" y1="39" x2="326.66666666666663" y2="53" class="tick"/><text x="326.66666666666663" y="28" class="lab">Keep</text><text x="326.66666666666663" y="74" class="sub">GitHub</text><line x1="553.3333333333333" y1="39" x2="553.3333333333333" y2="53" class="tick"/><text x="553.3333333333333" y="28" class="lab">Deploy</text><text x="553.3333333333333" y="74" class="sub">pac on the GT laptop</text><line x1="780.0" y1="39" x2="780.0" y2="53" class="tick"/><text x="780.0" y="28" class="lab">Live</text><text x="780.0" y="74" class="sub">GT environment</text></svg><figcaption>How GT ships agents today: written as YAML, kept in Git, deployed with pac.</figcaption></figure><div class="cheat"><div class="k">pac copilot cheat sheet</div><table class="md">
+<tr><th>command</th><th>what it does</th></tr>
+<tr><td><code>winget install Microsoft.PowerAppsCLI</code></td><td>installs pac, once (then open a new Git Bash window)</td></tr>
+<tr><td><code>pac auth create</code></td><td>signs you in; a browser window opens</td></tr>
+<tr><td><code>pac org who</code></td><td>shows which environment you're signed in to</td></tr>
+<tr><td><code>pac env list</code></td><td>every environment you can reach, with its URL</td></tr>
+<tr><td><code>pac auth create --environment &lt;url&gt;</code></td><td>switches to another environment</td></tr>
+<tr><td><code>pac copilot list</code></td><td>the agents in that environment</td></tr>
+<tr><td><code>pac copilot clone --bot &lt;id&gt; --output-dir &lt;folder&gt;</code></td><td>writes an agent out as YAML files</td></tr>
+<tr><td><code>pac copilot push</code></td><td>sends a cloned folder's changes back to its agent</td></tr>
+<tr><td><code>pac copilot publish --bot &lt;id&gt;</code></td><td>publishes the agent</td></tr>
+<tr><td><code>pac copilot pack</code> + <code>pac solution import</code></td><td>brings in an agent that was written as files from scratch</td></tr>
+</table></div></header>
+
+<section class="step" id="step-16">
+  <div class="num">B1</div>
+  <div class="body">
+    <h3>Install the Copilot Studio CLI</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Press Enter. The script checks whether <b>pac</b> is installed</li><li>Not installed? It offers to install it with <b>winget</b>, Windows' own installer. Type y to go ahead.</li><li>After an install: close this window, open a new Git Bash in the same folder and run  bash start.sh  again. New programs only show up in new windows.</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>In the browser, an agent is something you click through. As files, it's something you can read in one go, compare with yesterday's version, review with a colleague, and copy to another environment.</p>
+<p>The browser is the right place to learn and to test. The CLI is how an agent gets from a laptop into a client environment the same way every time.</p></div>
+      <div><div class="k">Inside</div><p>pac is the Power Platform CLI. Its Copilot Studio commands start with  pac copilot :</p>
+<pre>pac copilot list      the agents in an environment
+pac copilot clone     an agent as a folder of YAML files
+pac copilot pack      a folder as a solution you can import
+pac copilot publish   publish an agent
+pac copilot push      send a cloned folder's changes back</pre>
+<p>On Windows it installs as pac.cmd. Git Bash only finds that with its extension, so this script calls it for you either way. No winget? The VS Code extension Power Platform Tools ships pac too.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">What does the Copilot Studio CLI give you that the browser doesn't?</p><div class="opts"><button type="button" data-ok="0"><span>a</span>A faster chat with your agent</button><button type="button" data-ok="1"><span>b</span>The agent as files you can read, keep in Git and deploy again</button><button type="button" data-ok="0"><span>c</span>A second copy of Excel</button></div><p class="because" hidden>The agent itself is the same. The CLI turns it into files, which is what makes review, version history and repeatable deploys possible.</p></div>
+    <details><summary>Stuck?</summary><p>"winget is not recognized"? Install pac in PowerShell instead:</p>
+<pre>winget install Microsoft.PowerAppsCLI</pre>
+<p>or use the VS Code extension Power Platform Tools. Installed, but the script still can't find pac? Close every Git Bash window and open a new one. PATH changes only reach new windows.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-17">
+  <div class="num">B2</div>
+  <div class="body">
+    <h3>Sign in and find your agent</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Press Enter. The script runs  pac auth create : a browser window asks you to sign in with your GT account</li><li>It shows which environment you're signed in to. Not the workshop environment? Answer n, and paste its URL from the list</li><li>It runs  pac copilot list  and looks for <b>Barista <i>your name</i></b></li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>If pac can list your agent, your laptop can reach the environment from code: your account, your licence and GT's sign-in rules all said yes. Everything else in the CLI builds on this one check.</p>
+<p>It's also the first thing to try on any new laptop or environment, before you build anything on top of it.</p></div>
+      <div><div class="k">Inside</div><p>pac auth create stores a sign-in profile for your Windows account. Every pac command after that uses it until you sign in again.</p>
+<pre>pac org who        which environment you're signed in to
+pac env list       every environment you can reach, with URLs
+pac auth create --environment &lt;url&gt;   switch to another one</pre>
+<p>An environment URL looks like  https://&lt;org&gt;.crm4.dynamics.com . pac copilot list shows the same agents as the Agents page in Copilot Studio, for one environment at a time.</p></div>
+    </div>
+    
+    <details><summary>Stuck?</summary><p>AADSTS50078 in the error? Your sign-in expired. Run the step again and finish the multi-factor prompt in the browser. AADSTS530035? GT's sign-in rules block this device or app. Only IT can change that; the rest of the workshop still works without pac. Your agent isn't in the list? You're in another environment: answer n and paste the workshop environment's URL.</p></details>
+  </div>
+</section>
+
+<section class="step" id="step-18">
+  <div class="num">B3</div>
+  <div class="body">
+    <h3>Clone your agent to files</h3>
+    <div class="do"><div class="k">Do</div><ul><li>Press Enter. The script runs  pac copilot clone  and writes your agent into the folder <b>agent-code</b> next to this script</li><li>Explorer opens the folder. Open <b>agent.mcs.yml</b> in Notepad: your instructions are in there, word for word</li><li>Look in <b>actions</b> and <b>workflows</b>: that's Koffie tellen</li></ul></div>
+    <div class="cols">
+      <div><div class="k">Why</div><p>This folder is your agent. Put it in Git and every change gets a date, an author and a diff. A colleague can review a change before it goes live, the same way code gets reviewed.</p>
+<p>That's how GT's own agents are built: written as YAML, kept in Git, and deployed from a laptop with pac.</p></div>
+      <div><div class="k">Inside</div><p>A cloned agent is a handful of YAML files and folders:</p>
+<pre>agent.mcs.yml                  instructions and main settings
+settings.mcs.yml               name, sign-in and AI settings
+connectionreferences.mcs.yml   which connections it uses
+topics/  actions/  workflows/  topics, tools and flows</pre>
+<p>Change a file, then  pac copilot push  sends it back to the agent this folder came from, and  pac copilot publish  makes it live. A folder that never came from an agent goes in another way: pac copilot pack, then pac solution import.</p></div>
+    </div>
+    <div class="quiz"><div class="k">Quiz · +50 XP in the wizard</div><p class="q">You change agent.mcs.yml in your cloned folder. What sends the change</p><div class="opts"><button type="button" data-ok="0"><span>a</span>Saving the file</button><button type="button" data-ok="1"><span>b</span>pac copilot push</button><button type="button" data-ok="0"><span>c</span>pac copilot list</button></div><p class="because" hidden>Saving only changes the file on your laptop. push sends it to the agent the folder came from; publish then makes it live.</p></div>
+    <details><summary>Stuck?</summary><p>"Clone failed"? Check step 17 found your agent; press b and do it again if not. The folder is empty? Wait a minute after publishing the agent in step 12, then run this step again. Want to see it in VS Code? Right-click agent-code, Open with Code.</p></details>
+  </div>
+</section>
 
   <section class="trouble" id="troubleshooting">
     <div class="eb">When something's off</div>
@@ -565,6 +661,19 @@ bash start.sh --step 8     # jump to step 8 (your XP stays)</pre>
 <p>Publish the flow, then remove the tool from the agent and add it again. The agent keeps the old version until you do.</p>
 <h4>Still 8 after adding a row</h4>
 <p>The new row must be inside the table: it gets the table's colour. If it doesn't, drag the small handle at the table's bottom-right corner down one row. Then start a new test chat.</p>
+<h3>Bonus · the Copilot Studio CLI</h3>
+<h4>"pac: command not found" right after installing</h4>
+<p>Programs you install only show up in new windows. Close every Git Bash window, open a new one in the workshop folder, and run <code>bash start.sh</code> again. You continue at the same step.</p>
+<h4>winget isn't there or is blocked</h4>
+<p>Install pac with the VS Code extension <b>Power Platform Tools</b> instead; it ships pac without an installer.</p>
+<h4><code>AADSTS50078</code> or "multi-factor authentication has expired"</h4>
+<p>Your sign-in aged out. Run <code>pac auth create</code> again (or press Enter on step 17) and finish the prompt in the browser.</p>
+<h4><code>AADSTS530035</code></h4>
+<p>GT's sign-in rules block this device or app for pac. Only IT can change that. The rest of the workshop works without the CLI.</p>
+<h4>My agent isn't in <code>pac copilot list</code></h4>
+<p>pac is signed in to another environment. Run <code>pac env list</code>, copy the workshop environment's URL, then <code>pac auth create --environment &lt;that URL&gt;</code>. <code>pac org who</code> shows where you are now.</p>
+<h4>The clone fails or the folder is empty</h4>
+<p>Make sure the agent is published (step 12), wait a minute, and run step 18 again.</p>
 <h3>Still stuck</h3>
 <p>Run <code>bash start.sh doctor</code>, take a screenshot of it, and wave at the facilitator.</p>
   </section>
